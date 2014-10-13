@@ -1,0 +1,10 @@
+{
+	"appName": {
+		"message": "50VocabsADay",
+		"description": "The name of the application"
+	},
+	"appDescription": {
+		"message": "Reminds you learning your vocables throughout the day.",
+		"description": "The description of the application"
+	}
+}

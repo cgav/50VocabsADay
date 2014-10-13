@@ -4,3 +4,8 @@ bower_components/
 
 build/
 dist/
+test/bower_components/
+app/bower_components/
+
+.editorconfig
+.getattributes

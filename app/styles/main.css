@@ -1,3 +1,93 @@
-body {
-	padding: 20px;
+* {
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+}
+a {
+	text-decoration: none;
+	color: #fb8d3c;
+}
+
+.center-wrapper {
+	width: 540px;
+	margin: 100px auto 0 auto;
+}
+.center-wrapper p,
+.center-wrapper .translation-area,
+.center-wrapper .button-area,
+.center-wrapper .postpone-area {
+	text-align: center;
+	margin: 25px auto 0 auto;
+}
+
+.vocable-area {
+	margin-bottom: 25px;
+}
+.vocable-area p {
+	font-size: 48px;
+}
+
+.description-area {
+	margin-bottom: 25px;
+}
+.description-area p {
+	font-style: italic;
+}
+
+.translation-area input {
+	border: 0;
+	border-bottom: 2px solid #08c;
+	outline: none;
+	font-size: 32px;
+	text-align: center;
+}
+
+.button-area button {
+	border: 0;
+	padding: 10px 40px;
+	color: #fff;
+	outline: none
+}
+.button-area .check-button {
+	background-color: #6db803;
+}
+.button-area .check-button:active {
+	background-color: #589800;
+}
+.button-area .hint-button {
+	background-color: #08c;
+}
+.button-area .hint-button:active {
+	background-color: #007bb8;
+}
+
+.center-wrapper .postpone-area {
+	margin-top: 150px;
+}
+.postpone-area p {
+	margin-bottom: 5px;
+}
+.postpone-area button {
+	border: 0;
+	padding: 5px 20px;
+	width: 128px;
+
+	background-color: #08c;
+	color: #fff;
+	cursor: pointer;
+	outline: none;
+}
+.postpone-area button:active {
+	background-color: #007bb8;
+}
+
+.footer {
+	margin-top: 50px;
+	margin-bottom: 25px;
+}
+.footer * {
+	font-size: 12px;
+}
+.footer p {
+	color: #333;
 }

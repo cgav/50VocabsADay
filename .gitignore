@@ -4,8 +4,10 @@ bower_components/
 
 build/
 dist/
+package/
 test/bower_components/
 app/bower_components/
 
+.tmp
 .editorconfig
 .getattributes

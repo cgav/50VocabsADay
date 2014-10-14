@@ -13,6 +13,10 @@ connection.onerror = function (error) {
 };
 
 connection.onmessage = function (e) {
+	console.log('----------------------------------------------');
+	console.log('RELOAD called');
+	console.log('----------------------------------------------');
+
 	if (e.data) {
 		var data = JSON.parse(e.data);
 		if (data && data.command === 'reload') {

@@ -1,6 +1,6 @@
 {
 	"name": "__MSG_appName__",
-	"version": "0.0.1",
+	"version": "0.0.11",
 	"manifest_version": 2,
 	"description": "__MSG_appDescription__",
 	"icons": {
@@ -31,9 +31,6 @@
 		"css": [
 			"styles/main.css"
 		],
-		"js": [
-			"scripts/contentscript.js"
-		],
 		"run_at": "document_end",
 		"all_frames": false
 	}],
@@ -41,5 +38,6 @@
 		"tabs",
 		"http://*/*",
 		"https://*/*"
-	]
+	],
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

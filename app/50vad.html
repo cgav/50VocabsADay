@@ -12,17 +12,17 @@
 	<body ng-controller="VocabularyController">
 		<div class="center-wrapper">
 			<div class="vocable-area">
-				<p>office chair</p>
+				<p>{{ vocable.v }}</p>
 			</div>
 			<div class="description-area">
-				<p>"He sat in the <b>office chair</b> behind his desk."</p>
+				<p>"{{ vocable.s }}"</p>
 			</div>
 			<div class="translation-area">
-				<input type="text" class="translation" placeholder="translation">
+				<input type="text" class="translation" placeholder="translation" ng-model="translation" ng-class="{ correct: isCorrect, incorrect: isIncorrect }">
 			</div>
-			<div class="button-area">
-				<button class="check-button">Check</button>
-				<button class="hint-button">Hint</button>
+			<div class="button-area" ng-hide='isCorrect'>
+				<button class="check-button" ng-click="checkTranslation()">Check</button>
+				<button class="hint-button" ng-click="showHint()">Hint</button>
 			</div>
 			<div class="postpone-area">
 				<p>Leave me alone for the next ...</p>

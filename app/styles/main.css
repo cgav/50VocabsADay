@@ -41,6 +41,14 @@ a {
 	font-size: 32px;
 	text-align: center;
 }
+.translation-area input.correct {
+	border-bottom-color: #6db803;
+	color: #6db803;
+}
+.translation-area input.incorrect {
+	border-bottom-color: #d0021b;
+	color: #d0021b;
+}
 
 .button-area button {
 	border: 0;

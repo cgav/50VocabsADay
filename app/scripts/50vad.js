@@ -31,7 +31,6 @@
 
 				// redirect
 				window.history.back();
-				// document.location.href = $scope.redirectUrl;
 			};
 
 			// start

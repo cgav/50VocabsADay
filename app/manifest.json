@@ -11,6 +11,7 @@
 	"background": {
 		"scripts": [
 			"scripts/chromereload.js",
+			"scripts/modules/VocableManager.js",
 			"scripts/background.js"
 		]
 	},
@@ -28,14 +29,16 @@
 			"http://*/*",
 			"https://*/*"
 		],
-		"css": [
-			"styles/main.css"
+		"js": [
+			"scripts/contentscript.js"
 		],
 		"run_at": "document_end",
 		"all_frames": false
 	}],
 	"permissions": [
 		"tabs",
+		"storage",
+		"unlimitedStorage",
 		"http://*/*",
 		"https://*/*"
 	],

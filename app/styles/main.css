@@ -46,7 +46,8 @@ a {
 	border: 0;
 	padding: 10px 40px;
 	color: #fff;
-	outline: none
+	outline: none;
+	cursor: pointer;
 }
 .button-area .check-button {
 	background-color: #6db803;
@@ -55,10 +56,10 @@ a {
 	background-color: #589800;
 }
 .button-area .hint-button {
-	background-color: #08c;
+	background-color: #fb8d3c;
 }
 .button-area .hint-button:active {
-	background-color: #007bb8;
+	background-color: #d47834;
 }
 
 .center-wrapper .postpone-area {

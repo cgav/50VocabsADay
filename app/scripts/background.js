@@ -1,6 +1,7 @@
 'use strict';
 
-var urlCount = 0;
+var shutupUntil = Date.now(),
+	vocableManager = new window.VocableManager('en', 'de');
 
 // ------------------------------------
 // Helper functions
@@ -21,6 +22,30 @@ var sendUrl = function (tabId, url) {
 	});
 };
 
+var shutup = function (duration) {
+	chrome.storage.local.get('meta', function (metaRecord) {
+		if (!metaRecord.meta) {
+			metaRecord.meta = {};
+		}
+		metaRecord.meta.shutupUntil = Date.now() + duration * 1000;
+		shutupUntil = metaRecord.meta.shutupUntil;
+		chrome.storage.local.set(metaRecord, function () {
+			console.log('Shutting up for ' + duration + ' seconds until ' + new Date(metaRecord.meta.shutupUntil));
+		});
+	});
+};
+
+var updateShutupUntil = function () {
+	chrome.storage.local.get('meta', function (metaRecord) {
+		if (!metaRecord.meta) {
+			shutupUntil = Date.now();
+			return;
+		}
+
+		shutupUntil = metaRecord.meta.shutupUntil || Date.now();
+	});
+};
+
 // ------------------------------------
 // Event listener
 // ------------------------------------
@@ -29,17 +54,25 @@ chrome.runtime.onInstalled.addListener(function (details) {
 });
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-	console.log(message);
-	console.log(sender);
-	console.log(sendResponse);
+	if (message.type === 'SHUT-UP') {
+		shutup(message.duration);
+	} else if (message.type === 'GET-TRANSLATION') {
+		vocableManager.getTranslation(message.vocable, function (err, translation) {
+			sendResponse({
+				err: err,
+				translation: translation
+			});
+		});
+	}
+	
+	return true;
 });
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
 	if (changeInfo.status === 'loading' && changeInfo.url) {
-		urlCount++;
-		console.log('Current update count: ' + urlCount + ', url: ' + changeInfo.url);
+		console.log('Current url: ' + changeInfo.url + ', shutting up for ' + ((shutupUntil - Date.now()) / 1000) + ' seconds.');
 
-		if (urlCount % 3 === 0) {
+		if ((shutupUntil - Date.now()) < 0) {
 			chrome.tabs.update(tabId, {
 				url: '/50vad.html'
 			}, function () {
@@ -48,3 +81,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
 		}
 	}
 });
+
+// ------------------------------------
+// Entry point
+// ------------------------------------
+updateShutupUntil();

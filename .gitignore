@@ -7,6 +7,7 @@ dist/
 package/
 test/bower_components/
 app/bower_components/
+_res/
 
 .tmp
 .editorconfig

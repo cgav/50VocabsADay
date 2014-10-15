@@ -144,6 +144,34 @@ var updateVocable = function (vocableObject, callback) {
 	});
 };
 
+var getAllVocables = function (callback) {
+	chrome.storage.local.get('next', function (nextRecord) {
+		if (!nextRecord.next) {
+			return callback({});
+		}
+
+		return callback(nextRecord.next);
+	});
+};
+
+var deleteVocable = function (timestamp) {
+	// deleting next record
+	chrome.storage.local.get('next', function (nextRecord) {
+		var vocableName;
+
+		if (!nextRecord.next) {
+			return;
+		}
+
+		vocableName = nextRecord.next[timestamp];
+		delete nextRecord.next[timestamp];
+		chrome.storage.local.set(nextRecord, function () {
+			// deleting vocable
+			chrome.storage.local.remove(vocableName);
+		});
+	});
+};
+
 // ------------------------------------
 // Event listener
 // ------------------------------------
@@ -163,6 +191,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		updateVocable(message.vocable, function (hasNext) {
 			sendResponse(hasNext);
 		});
+	} else if (message.type === 'GET-ALL-VOCABLES') {
+		getAllVocables(function (vocables) {
+			sendResponse(vocables);
+		});
+	} else if (message.type === 'DELETE-VOCABLE') {
+		deleteVocable(message.timestamp);
 	}
 
 	return true;

@@ -1,0 +1,18 @@
+a {
+	color: #fb8d3c;
+	text-decoration: none;
+}
+
+tr:hover {
+	background-color: #eee;
+}
+td {
+	padding: 5px;
+}
+
+.vocable {
+	width: 350px;
+}
+.date {
+	color: #9b9b9b;
+}

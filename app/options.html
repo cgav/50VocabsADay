@@ -1,16 +1,29 @@
 <!doctype html>
-<html>
+<html ng-app="50vad-options-app">
 	<head>
 		<!-- build:css styles/vendor.css -->
 		<!-- bower:css -->
 		<!-- endbower -->
 		<!-- endbuild -->
-		<!-- build:css styles/main.css -->
-		<link href="styles/main.css" rel="stylesheet">
+		<!-- build:css styles/options.css -->
+		<link href="styles/options.css" rel="stylesheet">
 		<!-- endbuild -->
 	</head>
-	<body>
-		<h1>'Allo, 'Allo!</h1>
+	<body ng-controller='OptionsController'>
+		<h1>50VocabsADay Vocabulary List</h1>
+
+		<table>
+			<tr>
+				<td><b>Vocable</b></td>
+				<td><b>Will be checked</b></td>
+				<td></td>
+			</tr>
+			<tr ng-repeat="(timestamp, vocable) in vocables">
+				<td class="vocable">{{ vocable.substr(1) }}</td>
+				<td class="date">{{ convertToReadable(timestamp) }}</td>
+				<td><a href="#" ng-click="deleteVocable(timestamp)">delete</a></td>
+			</tr>
+		</table>
 						
 		<!-- build:js scripts/vendor.js -->
 		<!-- bower:js -->
@@ -19,6 +32,7 @@
 		<!-- endbuild -->
 
 		<!-- build:js scripts/options.js -->
+		<script src="scripts/ng-modules/MessageService.js"></script>
 		<script src="scripts/options.js"></script>
 		<!-- endbuild -->
 	</body>

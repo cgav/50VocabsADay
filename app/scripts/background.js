@@ -63,7 +63,7 @@ var storeVocable = function (vocable, translation, sentence) {
 		t: translation,
 		s: sentence,
 		l: 1,
-		ts: Date.now() + 600 * 1000
+		ts: Date.now() + 1000
 	};
 	chrome.storage.local.set(record);
 
@@ -115,6 +115,8 @@ var updateNextObject = function (vocableObject, newTimestamp, callback) {
 		delete nextRecord.next[vocableObject.ts];
 		nextRecord.next[newTimestamp] = '_' + vocableObject.v;
 		chrome.storage.local.set(nextRecord, callback);
+
+		return callback();
 	});
 };
 
@@ -206,15 +208,21 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
 	if (changeInfo.status === 'loading' && changeInfo.url) {
 		console.log('Current url: ' + changeInfo.url + ', shutting up for ' + ((shutupUntil - Date.now()) / 1000) + ' seconds.');
 
-		// if ((shutupUntil - Date.now()) < 0) {
-		// if (changeInfo.url.indexOf('chrome-extension://') === -1) {
-		if (false) {
-			chrome.tabs.update(tabId, {
-				url: '/50vad.html'
-			}, function () {
-				sendUrl(tabId, changeInfo.url);
-			});
+		if (changeInfo.url.indexOf('chrome-extension://') === 0) {
+			return;
 		}
+
+		getNextVocable(function (nextVocableObject) {
+			var now = Date.now();
+
+			if (shutupUntil - now < 0 && now > nextVocableObject.ts) {
+				chrome.tabs.update(tabId, {
+					url: '/50vad.html'
+				}, function () {
+					sendUrl(tabId, changeInfo.url);
+				});
+			}
+		});
 	}
 });
 

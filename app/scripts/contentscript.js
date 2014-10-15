@@ -30,7 +30,7 @@
 		}
 
 		sentence = text.substr(fromIndex, toIndex - fromIndex);
-		return sentence.trim();
+		return sentence;
 	};
 
 	var getSelection = function () {
@@ -38,13 +38,26 @@
 			from = selection.anchorOffset,
 			to = selection.focusOffset,
 			sentence = getSentence(selection.focusNode.textContent, from, to),
-			selectionObject = {
-				selection: selection.toString(),
-				from: from,
-				to: to,
-				sentence: sentence
-			};
+			totalSentence = '',
+			selectionObject,
+			childNodes = selection.anchorNode.parentNode.childNodes;
 
+		for (var i = 0; i < childNodes.length; i++) {
+			if (childNodes[i] === selection.anchorNode) {
+				totalSentence += sentence;
+			} else {
+				totalSentence += childNodes[i].textContent.trim() + ' ';
+			}
+		}
+
+		selectionObject = {
+			selection: selection.toString(),
+			from: from,
+			to: to,
+			sentence: sentence
+		};
+
+		console.log(totalSentence);
 		console.log(selectionObject);
 
 		return selectionObject;

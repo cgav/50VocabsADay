@@ -1,7 +1,7 @@
 (function (angular) {
 	'use strict';
 
-	var app = angular.module('50vad-app', ['MessageServiceModule']);
+	var app = angular.module('50vad-app', ['MessageServiceModule', 'ngSanitize']);
 
 	// ------------------------------------------
 	// Controllers

@@ -22,10 +22,14 @@
 			};
 
 			$scope.convertToReadable = function (timestamp) {
-				var millisleft = Date.now() - timestamp;
+				var millisleft = timestamp - Date.now();
+
+				if (millisleft < 0) {
+					return 'now';
+				}
 
 				if (millisleft <= 600 * 1000) {
-					return 'now';
+					return 'in ' + parseInt(millisleft / 1000) + ' seconds';
 				}
 
 				if (millisleft <= 3600 * 1000) {

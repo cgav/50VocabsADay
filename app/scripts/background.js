@@ -173,8 +173,8 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
 		console.log('Current url: ' + changeInfo.url + ', shutting up for ' + ((shutupUntil - Date.now()) / 1000) + ' seconds.');
 
 		// if ((shutupUntil - Date.now()) < 0) {
-		if (changeInfo.url.indexOf('chrome-extension://') === -1) {
-		// if (false) {
+		// if (changeInfo.url.indexOf('chrome-extension://') === -1) {
+		if (false) {
 			chrome.tabs.update(tabId, {
 				url: '/50vad.html'
 			}, function () {
@@ -201,12 +201,17 @@ chrome.contextMenus.create({
 
 		chrome.tabs.sendMessage(tab.id, message, function (response) {
 			vocableManager.getTranslation(response.selection, function (err, translation) {
-				if (err) {
-					console.log(err);
-					return;
-				}
+				var translationMessage = {
+					type: 'TRANSLATION',
+					vocable: response.selection,
+					translation: translation
+				};
 
-				storeVocable(response.selection, translation, response.sentence);
+				chrome.tabs.sendMessage(tab.id, translationMessage, function (_response) {
+					if (_response.store) {
+						storeVocable(response.selection, translation, response.sentence);
+					}
+				});
 			});
 		});
 	}

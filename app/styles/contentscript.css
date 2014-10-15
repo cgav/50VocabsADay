@@ -1,0 +1,44 @@
+.fvad-box {
+	background-color: #fff;
+	width: 350px;
+	margin-left: -175px;
+
+	position: fixed;
+	top: 200px;
+	left: 50%;
+	padding: 15px;
+	border-radius: 4px;
+	box-shadow: 0px 6px 14px 4px rgba(0,0,0,0.50);
+}
+
+.fvad-box p {
+	font-family: 'Arial', sans-serif;
+	font-size: 16px;
+	margin: 0 !important;
+	padding: 0 !important;
+	text-align: center;
+}
+.fvad-box p.fvad-vocable {
+	font-size: 14px;
+	margin-bottom: 15px !important;
+	color: #9b9b9b;
+}
+.fvad-box p.fvad-translation {
+	font-size: 24px;
+	margin-bottom: 15px !important;
+}
+
+.fvad-box .fvad-button-area {
+	text-align: center;
+}
+.fvad-box button.fvad-button {
+	border: 0;
+	background-color: #fb8d3c;
+	color: #fff;
+	outline: none;
+	padding: 8px 20px;
+	cursor: pointer;
+}
+.fvad-box button.fvad-button:active {
+	background-color: #d47834;
+}

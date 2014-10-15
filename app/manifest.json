@@ -21,7 +21,11 @@
 			"http://*/*",
 			"https://*/*"
 		],
+		"css": [
+			"styles/contentscript.css"
+		],
 		"js": [
+			"scripts/vendor/jquery.js",
 			"scripts/contentscript.js"
 		],
 		"run_at": "document_end",

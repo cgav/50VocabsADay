@@ -54,14 +54,14 @@ var updateShutupUntil = function () {
 	});
 };
 
-var storeVocable = function (vocable, translation) {
+var storeVocable = function (vocable, translation, sentence) {
 	var record = {};
 
 	// storing selected vocable
 	record['_' + vocable] = {
 		v: vocable,
 		t: translation,
-		s: '... no sentence yet ...',
+		s: sentence,
 		l: 1,
 		ts: Date.now() + 600 * 1000
 	};
@@ -194,16 +194,20 @@ chrome.contextMenus.create({
 	type: 'normal',
 	title: 'Translate with 50VocabsADay',
 	contexts: ['selection'],
-	onclick: function (info) {
-		var vocable = info.selectionText;
+	onclick: function (info, tab) {
+		var message = {
+			type: 'GET-SELECTION'
+		};
 
-		vocableManager.getTranslation(vocable, function (err, translation) {
-			if (err) {
-				console.log(err);
-				return;
-			}
+		chrome.tabs.sendMessage(tab.id, message, function (response) {
+			vocableManager.getTranslation(response.selection, function (err, translation) {
+				if (err) {
+					console.log(err);
+					return;
+				}
 
-			storeVocable(vocable, translation);
+				storeVocable(response.selection, translation, response.sentence);
+			});
 		});
 	}
 });

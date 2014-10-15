@@ -9,7 +9,8 @@ var shutupUntil = Date.now(),
 		4: 24 * 3600 * 1000,
 		5: 25 * 24 * 3600 * 1000,
 		6: 120 * 24 * 3600 * 1000
-	};
+	},
+	nextPeriod = Date.now();
 
 // ------------------------------------
 // Helper functions
@@ -120,9 +121,32 @@ var updateNextObject = function (vocableObject, newTimestamp, callback) {
 	});
 };
 
+var deleteVocable = function (timestamp) {
+	// deleting next record
+	chrome.storage.local.get('next', function (nextRecord) {
+		var vocableName;
+
+		if (!nextRecord.next) {
+			return;
+		}
+
+		vocableName = nextRecord.next[timestamp];
+		delete nextRecord.next[timestamp];
+		chrome.storage.local.set(nextRecord, function () {
+			// deleting vocable
+			chrome.storage.local.remove(vocableName);
+		});
+	});
+};
+
 var updateVocable = function (vocableObject, callback) {
 	var recordToStore = {},
 		newTimestamp = calculateNewTimestamp(vocableObject.l);
+
+	if (vocableObject.l > 6) {
+		deleteVocable(vocableObject.ts);
+		return callback(false);
+	}
 
 	// update next object
 	updateNextObject(vocableObject, newTimestamp, function () {
@@ -140,6 +164,7 @@ var updateVocable = function (vocableObject, callback) {
 					return callback(!!nextVocableObject);
 				});
 			} else {
+				nextPeriod = Date.now() + 15 * 60 * 1000;
 				return callback(false);
 			}
 		});
@@ -153,24 +178,6 @@ var getAllVocables = function (callback) {
 		}
 
 		return callback(nextRecord.next);
-	});
-};
-
-var deleteVocable = function (timestamp) {
-	// deleting next record
-	chrome.storage.local.get('next', function (nextRecord) {
-		var vocableName;
-
-		if (!nextRecord.next) {
-			return;
-		}
-
-		vocableName = nextRecord.next[timestamp];
-		delete nextRecord.next[timestamp];
-		chrome.storage.local.set(nextRecord, function () {
-			// deleting vocable
-			chrome.storage.local.remove(vocableName);
-		});
 	});
 };
 
@@ -205,16 +212,21 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 });
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
-	if (changeInfo.status === 'loading' && changeInfo.url) {
-		console.log('Current url: ' + changeInfo.url + ', shutting up for ' + ((shutupUntil - Date.now()) / 1000) + ' seconds.');
+	var now = Date.now();
 
-		if (changeInfo.url.indexOf('chrome-extension://') === 0) {
+	if (changeInfo.status === 'loading' && changeInfo.url) {
+		console.log('Shutting up for ' +
+			parseInt((shutupUntil - Date.now()) / 1000) +
+			' seconds, nextPeriod in ' +
+			parseInt((nextPeriod - Date.now()) / 1000) +
+			' seconds.'
+		);
+
+		if (changeInfo.url.indexOf('chrome-extension://') === 0 || now < nextPeriod) {
 			return;
 		}
 
 		getNextVocable(function (nextVocableObject) {
-			var now = Date.now();
-
 			if (shutupUntil - now < 0 && now > nextVocableObject.ts) {
 				chrome.tabs.update(tabId, {
 					url: '/50vad.html'

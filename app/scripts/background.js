@@ -63,7 +63,7 @@ var storeVocable = function (vocable, translation, sentence) {
 		t: translation,
 		s: sentence,
 		l: 1,
-		ts: Date.now() + 1000
+		ts: Date.now() + levels[1]
 	};
 	chrome.storage.local.set(record);
 

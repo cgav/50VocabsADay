@@ -102,34 +102,46 @@ var getNextVocable = function (callback) {
 	});
 };
 
+var calculateNewTimestamp = function (nextLevel) {
+	return Date.now() + levels[nextLevel];
+};
+
+var updateNextObject = function (vocableObject, newTimestamp, callback) {
+	chrome.storage.local.get('next', function (nextRecord) {
+		if (!nextRecord.next) {
+			nextRecord.next = {};
+		}
+
+		delete nextRecord.next[vocableObject.ts];
+		nextRecord.next[newTimestamp] = '_' + vocableObject.v;
+		chrome.storage.local.set(nextRecord, callback);
+	});
+};
+
 var updateVocable = function (vocableObject, callback) {
 	var recordToStore = {},
-		oldTimestamp = vocableObject.ts;
+		newTimestamp = calculateNewTimestamp(vocableObject.l);
 
-	// check whether level increased
-	if (vocableObject.l === 1) {
-		// user did wrong
-		getNextVocable(function (nextVocableObject) {
-			// TODO: update next!
-			return callback(!!nextVocableObject);
-		});
-	} else {
+	// update next object
+	updateNextObject(vocableObject, newTimestamp, function () {
+		// check whether level increased
+		if (vocableObject.l > 1) {
+			vocableObject.ts = newTimestamp;
+		}
+
 		// updating vocable record
-		vocableObject.ts = Date.now() + levels[vocableObject.l];
 		recordToStore['_' + vocableObject.v] = vocableObject;
 		chrome.storage.local.set(recordToStore, function () {
-			// updating next record
-			chrome.storage.local.get('next', function (nextRecord) {
-				if (!nextRecord.next) {
-					nextRecord.next = {};
-				}
-
-				delete nextRecord.next[oldTimestamp];
-				nextRecord.next[vocableObject.ts] = '_' + vocableObject.v;
-				chrome.storage.local.set(nextRecord, callback);
-			});
+			if (vocableObject.l === 1) {
+				// user did wrong -> next vocable
+				getNextVocable(function (nextVocableObject) {
+					return callback(!!nextVocableObject);
+				});
+			} else {
+				return callback(false);
+			}
 		});
-	}
+	});
 };
 
 // ------------------------------------

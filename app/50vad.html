@@ -18,7 +18,7 @@
 				<p>"{{ vocable.s }}"</p>
 			</div>
 			<div class="translation-area">
-				<input type="text" class="translation" placeholder="translation" ng-model="translation" ng-class="{ correct: isCorrect, incorrect: isIncorrect }">
+				<input type="text" class="translation" placeholder="translation" ng-model="translation" ng-class="{ correct: isCorrect, incorrect: isIncorrect }" ng-keyup="isReturn($event) && checkTranslation()" sync-focus-with="isFocused" />
 			</div>
 			<div class="button-area" ng-hide='isCorrect'>
 				<button class="check-button" ng-click="checkTranslation()">Check</button>

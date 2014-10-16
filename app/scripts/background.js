@@ -113,11 +113,14 @@ var updateNextObject = function (vocableObject, newTimestamp, callback) {
 			nextRecord.next = {};
 		}
 
+		if (!(vocableObject.ts in nextRecord.next)) {
+			debugger;
+		}
 		delete nextRecord.next[vocableObject.ts];
 		nextRecord.next[newTimestamp] = '_' + vocableObject.v;
-		chrome.storage.local.set(nextRecord, callback);
-
-		return callback();
+		chrome.storage.local.set(nextRecord, function () {
+			return callback();
+		});
 	});
 };
 

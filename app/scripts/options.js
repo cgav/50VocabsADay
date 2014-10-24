@@ -68,6 +68,7 @@
 			};
 
 			$scope.showShutupPanel = function () {
+				console.log('shutup:', $scope.shutupUntil > Date.now());
 				return $scope.shutupUntil > Date.now();
 			};
 
@@ -81,6 +82,7 @@
 			};
 
 			$scope.showNextVocablePanel = function () {
+				console.log('next vocable wait:', $scope.nextVocableIn > Date.now());
 				return $scope.nextVocableIn > Date.now();
 			};
 

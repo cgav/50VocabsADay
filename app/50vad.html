@@ -12,10 +12,7 @@
 	<body ng-controller="VocabularyController">
 		<div class="center-wrapper">
 			<div class="vocable-area">
-				<p>{{ vocable.v }}</p>
-			</div>
-			<div class="description-area">
-				<p ng-bind-html="vocable.s"></p>
+				<p>{{ vocable.t }}</p>
 			</div>
 			<div class="translation-area">
 				<input type="text" class="translation" placeholder="translation" ng-model="translation" ng-class="{ correct: isCorrect, incorrect: isIncorrect }" ng-keyup="isReturn($event) && checkTranslation()" sync-focus-with="isFocused" />

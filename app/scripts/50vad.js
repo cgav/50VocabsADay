@@ -34,7 +34,7 @@
 			};
 
 			$scope.checkTranslation = function () {
-				if ($scope.translation === $scope.vocable.t) {
+				if ($scope.translation === $scope.vocable.v) {
 					$scope.isCorrect = true;
 					
 					if (!$scope.isIncorrect && !$scope.hintGiven) {
@@ -70,9 +70,9 @@
 			};
 
 			$scope.showHint = function () {
-				if ($scope.displayedChars < $scope.vocable.t.length) {
+				if ($scope.displayedChars < $scope.vocable.v.length) {
 					$scope.displayedChars++;
-					$scope.translation = $scope.vocable.t.substr(0, $scope.displayedChars);
+					$scope.translation = $scope.vocable.v.substr(0, $scope.displayedChars);
 					$scope.vocable.l = 1;
 					$scope.hintGiven = true;
 				}

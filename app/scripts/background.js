@@ -74,6 +74,21 @@ var updateShutupUntil = function () {
 	});
 };
 
+var updateNextPeriod = function () {
+	chrome.storage.local.get('next', function (nextRecord) {
+		var keys;
+		
+		if (!nextRecord.next) {
+			return;
+		}
+
+		keys = Object.keys(nextRecord.next);
+		if (keys.length > 0) {
+			nextPeriod = parseInt(keys[0]);
+		}
+	});
+};
+
 var storeVocable = function (vocable, translation, sentence, callback) {
 	var record = {};
 
@@ -337,6 +352,7 @@ chrome.runtime.onConnect.addListener(function (popupPort) {
 // Entry point
 // ------------------------------------
 updateShutupUntil();
+updateNextPeriod();
 
 // creating context menus
 chrome.contextMenus.create({

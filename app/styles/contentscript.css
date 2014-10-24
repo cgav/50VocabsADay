@@ -1,44 +1,48 @@
 .fvad-box {
-	background-color: #fff;
-	width: 350px;
-	margin-left: -175px;
+	background-color: #fff !important;
+	width: 350px !important;
+	margin-left: -175px !important;
 
-	position: fixed;
-	top: 200px;
-	left: 50%;
-	padding: 15px;
-	border-radius: 4px;
-	box-shadow: 0px 6px 14px 4px rgba(0,0,0,0.50);
+	position: fixed !important;
+	top: 200px !important;
+	left: 50% !important;
+	padding: 15px !important;
+	border-radius: 4px !important;
+	box-shadow: 0px 6px 14px 4px rgba(0,0,0,0.50) !important;
 }
 
 .fvad-box p {
-	font-family: 'Arial', sans-serif;
-	font-size: 16px;
+	font-family: 'Arial', sans-serif !important;
+	font-size: 16px !important;
 	margin: 0 !important;
 	padding: 0 !important;
-	text-align: center;
+	text-align: center !important;
 }
 .fvad-box p.fvad-vocable {
-	font-size: 14px;
+	font-size: 14px !important;
 	margin-bottom: 15px !important;
-	color: #9b9b9b;
+	color: #9b9b9b !important;
 }
 .fvad-box p.fvad-translation {
-	font-size: 24px;
+	font-size: 24px !important;
 	margin-bottom: 15px !important;
 }
 
 .fvad-box .fvad-button-area {
-	text-align: center;
+	text-align: center !important;
 }
 .fvad-box button.fvad-button {
-	border: 0;
-	background-color: #fb8d3c;
-	color: #fff;
-	outline: none;
-	padding: 8px 20px;
-	cursor: pointer;
+	font-family: 'Arial', sans-serif !important;
+	font-size: 12px !important;
+	border: 0 !important;
+	background-color: #fb8d3c !important;
+	color: #fff !important;
+	outline: none !important;
+	padding: 8px 20px !important;
+	cursor: pointer !important;
+
+	margin: 0 auto !important;
 }
 .fvad-box button.fvad-button:active {
-	background-color: #d47834;
+	background-color: #d47834 !important;
 }

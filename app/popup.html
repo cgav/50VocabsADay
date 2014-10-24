@@ -1,0 +1,51 @@
+<!doctype html>
+<html ng-app="50vad-popup-app">
+	<head>
+		<!-- build:css styles/vendor.css -->
+		<!-- bower:css -->
+		<!-- endbower -->
+		<!-- endbuild -->
+		<!-- build:css styles/popup.css -->
+		<link href="styles/popup.css" rel="stylesheet">
+		<!-- endbuild -->
+	</head>
+	<body ng-controller='PopupController'>
+		<h1>50 Vocabs A Day!</h1>
+		
+		<p>Search for translation:</p>
+		<input type="text" ng-model="q" ng-keyup="isReturn($event) && search()" />
+
+		<div ng-show="showDictTranslation()">
+			<p>
+				Vocable: <b>{{ result.dict[0].base_form }}</b>
+			</p>
+			<table>
+				<tr ng-repeat="entry in entries">
+					<td>{{ entry.previous_word }} {{ entry.word }}</td>
+				</tr>	
+			</table>
+		</div>
+		<div ng-show="showSentenceTranslation()">
+			<p>
+				Vocable: <b>{{ result.sentences[0].orig }}</b>
+			</p>
+			<table>
+				<tr>
+					<td>{{ result.sentences[0].trans }}</td>
+				</tr>	
+			</table>
+		</div>
+		
+		<!-- build:js scripts/vendor.js -->
+		<!-- bower:js -->
+		<script src="bower_components/angular/angular.js"></script>
+		<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+		<!-- endbower -->
+		<!-- endbuild -->
+
+		<!-- build:js scripts/popup.js -->
+		<script src="scripts/ng-modules/MessageService.js"></script>
+		<script src="scripts/popup.js"></script>
+		<!-- endbuild -->
+	</body>
+</html>

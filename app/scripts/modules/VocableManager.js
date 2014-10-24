@@ -22,20 +22,14 @@
 			return translationObject;
 		};
 
-		me.getTranslation = function (vocable, callback) {
-			var request = new window.XMLHttpRequest(),
-				url = me.getApiUrl(vocable);
+		me.ajax = function (url, callback) {
+			var request = new window.XMLHttpRequest();
 
 			request.open('GET', url, true);
 			request.timeout = 5000;
 			request.onload = function () {
-				var json,
-					translationObject;
-
 				if (request.status >= 200 && request.status < 400) {
-					json = JSON.parse(request.responseText);
-					translationObject = me.prepareTranslationObject(json);
-					return callback(null, translationObject);
+					return callback(null, request.responseText);
 				}
 
 				return callback({
@@ -54,6 +48,38 @@
 			};
 
 			request.send();
+		};
+
+		me.getTranslation = function (vocable, callback) {
+			var url = me.getApiUrl(vocable);
+
+			me.ajax(url, function (error, result) {
+				var json,
+					translationObject;
+
+				if (error) {
+					return callback(error, null);
+				}
+
+				json = JSON.parse(result);
+				translationObject = me.prepareTranslationObject(json);
+				return callback(null, translationObject);
+			});
+		};
+
+		me.getRawTranslation = function (vocable, callback) {
+			var url = me.getApiUrl(vocable);
+
+			me.ajax(url, function (error, result) {
+				var json;
+
+				if (error) {
+					return callback(error, null);
+				}
+
+				json = JSON.parse(result);
+				return callback(null, json);
+			});
 		};
 
 		return me;

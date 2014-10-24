@@ -217,6 +217,10 @@ var getAllVocables = function (callback) {
 	});
 };
 
+var searchVocable = function (vocable, callback) {
+	vocableManager.getRawTranslation(vocable, callback);
+};
+
 // ------------------------------------
 // Event listener
 // ------------------------------------
@@ -249,6 +253,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		sendResponse(nextPeriod);
 	} else if (message.type === 'DELETE-VOCABLE') {
 		deleteVocable(message.timestamp);
+	} else if (message.type === 'SEARCH-VOCABLE') {
+		searchVocable(message.v, function (error, translationResult) {
+			console.log(translationResult);
+			sendResponse({
+				error: error,
+				translationResult: translationResult
+			});
+		});
 	}
 
 	return true;

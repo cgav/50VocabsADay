@@ -8,7 +8,7 @@
 		me.toLanguage = toLanguage;
 
 		me.getApiUrl = function (vocable) {
-			var url = 'http://translate.google.com/translate_a/t?client=x&text=' + vocable + '&hl=' + this.fromLanguage + '&sl=auto&tl=' + this.toLanguage;
+			var url = 'http://translate.google.com/translate_a/t?client=x&text=' + vocable + '&sl=' + this.fromLanguage + '&tl=' + this.toLanguage;
 
 			return window.encodeURI(url);
 		};

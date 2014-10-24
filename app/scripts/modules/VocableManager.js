@@ -2,27 +2,40 @@
 	'use strict';
 
 	function VocableManager(fromLanguage, toLanguage) {
-		this.fromLanguage = fromLanguage;
-		this.toLanguage = toLanguage;
+		var me = this;
 
-		this.getApiUrl = function (vocable) {
-			var url = 'http://api.mymemory.translated.net/get?q=' + vocable + '&langpair=' + this.fromLanguage + '|' + this.toLanguage;
+		me.fromLanguage = fromLanguage;
+		me.toLanguage = toLanguage;
+
+		me.getApiUrl = function (vocable) {
+			var url = 'http://translate.google.com/translate_a/t?client=x&text=' + vocable + '&hl=' + this.fromLanguage + '&sl=auto&tl=' + this.toLanguage;
 
 			return window.encodeURI(url);
 		};
 
-		this.getTranslation = function (vocable, callback) {
+		me.prepareTranslationObject = function (json) {
+			var translationObject = {
+				v: json.sentences[0].orig,
+				t: json.sentences[0].trans
+			};
+
+			return translationObject;
+		};
+
+		me.getTranslation = function (vocable, callback) {
 			var request = new window.XMLHttpRequest(),
-				url = this.getApiUrl(vocable);
+				url = me.getApiUrl(vocable);
 
 			request.open('GET', url, true);
 			request.timeout = 5000;
 			request.onload = function () {
-				var json;
+				var json,
+					translationObject;
 
 				if (request.status >= 200 && request.status < 400) {
 					json = JSON.parse(request.responseText);
-					return callback(null, json.responseData.translatedText);
+					translationObject = me.prepareTranslationObject(json);
+					return callback(null, translationObject);
 				}
 
 				return callback({
@@ -43,7 +56,7 @@
 			request.send();
 		};
 
-		return this;
+		return me;
 	}
 
 	window.VocableManager = VocableManager;

@@ -73,13 +73,13 @@ var updateShutupUntil = function () {
 	});
 };
 
-var storeVocable = function (vocable, translation, sentence) {
+var storeVocable = function (vocable, translations, sentence) {
 	var record = {};
 
 	// storing selected vocable
 	record['_' + vocable] = {
 		v: vocable,
-		t: translation,
+		t: translations,
 		s: sentence,
 		l: 1,
 		ts: Date.now() + levels[1]
@@ -286,16 +286,16 @@ chrome.contextMenus.create({
 		};
 
 		chrome.tabs.sendMessage(tab.id, message, function (response) {
-			vocableManager.getTranslation(response.selection, function (err, translation) {
+			vocableManager.getTranslation(response.selection, function (err, translationObject) {
 				var translationMessage = {
-					type: 'TRANSLATION',
-					vocable: response.selection,
-					translation: translation
-				};
+						type: 'TRANSLATION',
+						vocable: translationObject.v,
+						translation: translationObject.t
+					};
 
 				chrome.tabs.sendMessage(tab.id, translationMessage, function (_response) {
 					if (_response.store) {
-						storeVocable(response.selection, translation, response.sentence);
+						storeVocable(translationObject.v, translationObject.t, response.sentence);
 					}
 				});
 			});

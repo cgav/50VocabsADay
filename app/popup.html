@@ -15,23 +15,13 @@
 		<p>Search for translation:</p>
 		<input type="text" ng-model="q" ng-keyup="isReturn($event) && search()" />
 
-		<div ng-show="showDictTranslation()">
+		<div ng-show="showTranslation()">
 			<p>
-				Vocable: <b>{{ result.dict[0].base_form }}</b>
+				Vocable: <b>{{ translation.v }}</b>
 			</p>
 			<table>
 				<tr ng-repeat="entry in entries">
-					<td ng-click="changeTranslation(result.dict[0].base_form, entry.word)">{{ entry.previous_word }} {{ entry.word }}</td>
-				</tr>	
-			</table>
-		</div>
-		<div ng-show="showSentenceTranslation()">
-			<p>
-				Vocable: <b>{{ result.sentences[0].orig }}</b>
-			</p>
-			<table>
-				<tr>
-					<td ng-click="changeTranslation(result.sentences[0].orig, result.sentences[0].trans)">{{ result.sentences[0].trans }}</td>
+					<td ng-click="changeTranslation(translation.v, entry)">{{ entry }} <b ng-show="translation.t === entry">(selected)</b></td>
 				</tr>	
 			</table>
 		</div>

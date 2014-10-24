@@ -16,11 +16,13 @@
 			<tr>
 				<td><b>Vocable</b></td>
 				<td><b>Will be checked</b></td>
+				<td><b>Level</b></td>
 				<td></td>
 			</tr>
-			<tr ng-repeat="(timestamp, vocable) in vocables">
-				<td class="vocable">{{ vocable.substr(1) }}</td>
+			<tr ng-repeat="(timestamp, vocableObject) in vocables">
+				<td class="vocable">{{ vocableObject.v.substr(1) }}</td>
 				<td class="date">{{ convertToReadable(timestamp) }}</td>
+				<td class="level">{{ vocableObject.l }}</td>
 				<td><a href="#" ng-click="deleteVocable(timestamp)">delete</a></td>
 			</tr>
 		</table>

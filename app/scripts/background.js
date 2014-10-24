@@ -176,12 +176,40 @@ var updateVocable = function (vocableObject, callback) {
 };
 
 var getAllVocables = function (callback) {
+	var getVocable,
+		vocables = {};
+
+	getVocable = function (vocable) {
+		var dfd = window.when.defer();
+
+		chrome.storage.local.get(vocable, function (vocableObject) {
+			if (vocableObject[vocable]) {
+				vocables[vocableObject[vocable].ts].l = vocableObject[vocable].l;
+			}
+			dfd.resolve();
+		});
+
+		return dfd.promise;
+	};
+
 	chrome.storage.local.get('next', function (nextRecord) {
+		var dfds = [];
+
 		if (!nextRecord.next) {
 			return callback({});
 		}
 
-		return callback(nextRecord.next);
+		for (var ts in nextRecord.next) {
+			vocables[ts] = {
+				v: nextRecord.next[ts],
+				l: 0
+			};
+			dfds.push(getVocable(vocables[ts].v));
+		}
+
+		window.when.all(dfds).then(function () {
+			return callback(vocables);
+		});
 	});
 };
 

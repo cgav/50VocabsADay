@@ -12,6 +12,7 @@
 		"scripts": [
 			"scripts/chromereload.js",
 			"scripts/modules/VocableManager.js",
+			"scripts/vendor/when.js",
 			"scripts/background.js"
 		]
 	},

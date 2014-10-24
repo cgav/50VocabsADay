@@ -74,28 +74,46 @@ var updateShutupUntil = function () {
 	});
 };
 
-var storeVocable = function (vocable, translation, sentence) {
+var storeVocable = function (vocable, translation, sentence, callback) {
 	var record = {};
 
-	// storing selected vocable
-	record['_' + vocable] = {
-		v: vocable,
-		t: translation,
-		s: sentence,
-		l: 1,
-		ts: Date.now() + levels[1]
-	};
-	chrome.storage.local.set(record);
+	// check whether vocable already exists
+	chrome.storage.local.get('_' + vocable, function (vocableRecord) {
+		if (vocableRecord['_' + vocable]) {
+			console.log('Vocable \'' + vocable + '\' does already exist. It will not be stored.');
 
-	// storing timestamp when vocable should be checked next
-	chrome.storage.local.get('next', function (nextRecord) {
-		if (!nextRecord.next) {
-			nextRecord.next = {};
+			// vocable does already exist
+			if (typeof callback === 'function') {
+				return callback({unique: false});
+			}
+		} else {
+
+			// storing selected vocable
+			record['_' + vocable] = {
+				v: vocable,
+				t: translation,
+				s: sentence,
+				l: 1,
+				ts: Date.now() + levels[1]
+			};
+			chrome.storage.local.set(record, function () {
+
+				// storing timestamp when vocable should be checked next
+				chrome.storage.local.get('next', function (nextRecord) {
+					if (!nextRecord.next) {
+						nextRecord.next = {};
+					}
+
+					// next check in 10 minutes
+					nextRecord.next[record['_' + vocable].ts] = '_' + vocable;
+					chrome.storage.local.set(nextRecord, function () {
+						if (typeof callback === 'function') {
+							return callback({unique: true});
+						}
+					});
+				});
+			});
 		}
-
-		// next check in 10 minutes
-		nextRecord.next[record['_' + vocable].ts] = '_' + vocable;
-		chrome.storage.local.set(nextRecord);
 	});
 };
 

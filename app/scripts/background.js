@@ -185,6 +185,8 @@ var getAllVocables = function (callback) {
 		chrome.storage.local.get(vocable, function (vocableObject) {
 			if (vocableObject[vocable]) {
 				vocables[vocableObject[vocable].ts].l = vocableObject[vocable].l;
+				vocables[vocableObject[vocable].ts].t = vocableObject[vocable].t;
+				vocables[vocableObject[vocable].ts].s = vocableObject[vocable].s;
 			}
 			dfd.resolve();
 		});
@@ -202,6 +204,8 @@ var getAllVocables = function (callback) {
 		for (var ts in nextRecord.next) {
 			vocables[ts] = {
 				v: nextRecord.next[ts],
+				t: '',
+				s: '',
 				l: 0
 			};
 			dfds.push(getVocable(vocables[ts].v));
@@ -236,6 +240,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		getAllVocables(function (vocables) {
 			sendResponse(vocables);
 		});
+	} else if (message.type === 'GET-SHUT-UP-UNTIL') {
+		sendResponse(shutupUntil);
+	} else if (message.type === 'RESET-SHUT-UP-UNTIL') {
+		shutup(0);
+		sendResponse(null);
 	} else if (message.type === 'DELETE-VOCABLE') {
 		deleteVocable(message.timestamp);
 	}

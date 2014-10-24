@@ -3,15 +3,36 @@ a {
 	text-decoration: none;
 }
 
-tr:hover {
+tr.odd {
 	background-color: #eee;
+}
+tr:hover {
+	background-color: #ddd;
 }
 td {
 	padding: 5px;
 }
 
-.vocable {
-	width: 350px;
+button {
+	font-family: 'Arial', sans-serif;
+	font-size: 12px;
+	border: 0;
+	background-color: #fb8d3c ;
+	color: #fff;
+	outline: none;
+	padding: 8px 20px;
+	cursor: pointer;
+}
+button:active {
+	background-color: #d47834;
+}
+
+.vocable,
+.translation {
+	width: 150px;
+}
+.sentence {
+	width: 300px;
 }
 .date {
 	color: #9b9b9b;

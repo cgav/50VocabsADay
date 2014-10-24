@@ -10,17 +10,27 @@
 		<!-- endbuild -->
 	</head>
 	<body ng-controller='OptionsController'>
-		<h1>50VocabsADay Vocabulary List</h1>
+		<h1>50VocabsADay</h1>
 
+		<div ng-show="showShutupPanel()">
+			<p>I won't annoy you until <b>{{ shutupUntil | date:"MMM d - H:mm" }}</b>.</p>
+			<button ng-click="resetShutupUntilValue()">I'm good now, let's train!</button>
+		</div>
+
+		<h2>Vocabulary List</h2>
 		<table>
 			<tr>
 				<td><b>Vocable</b></td>
+				<td><b>Translation</b></td>
+				<td><b>Sentence</b></td>
 				<td><b>Will be checked</b></td>
 				<td><b>Level</b></td>
 				<td></td>
 			</tr>
-			<tr ng-repeat="(timestamp, vocableObject) in vocables">
+			<tr ng-repeat="(timestamp, vocableObject) in vocables" ng-class-odd="'odd'">
 				<td class="vocable">{{ vocableObject.v.substr(1) }}</td>
+				<td class="translation">{{ vocableObject.t }}</td>
+				<td class="sentence" ng-bind-html="vocableObject.s"></td>
 				<td class="date">{{ convertToReadable(timestamp) }}</td>
 				<td class="level">{{ vocableObject.l }}</td>
 				<td><a href="#" ng-click="deleteVocable(timestamp)">delete</a></td>
@@ -30,6 +40,7 @@
 		<!-- build:js scripts/vendor.js -->
 		<!-- bower:js -->
 		<script src="bower_components/angular/angular.js"></script>
+		<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 		<!-- endbower -->
 		<!-- endbuild -->
 

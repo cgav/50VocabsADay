@@ -1,7 +1,7 @@
 (function (angular) {
 	'use strict';
 
-	var app = angular.module('50vad-options-app', ['MessageServiceModule']);
+	var app = angular.module('50vad-options-app', ['MessageServiceModule', 'ngSanitize']);
 
 	// ------------------------------------------
 	// Controllers
@@ -11,12 +11,20 @@
 		'MessageService',
 		function ($scope, MessageService) {
 			$scope.vocables = {};
+			$scope.shutupUntil = Date.now();
 
 			$scope.init = function () {
 				MessageService.sendMessage({
 					type: 'GET-ALL-VOCABLES'
 				}, function (vocables) {
 					$scope.vocables = vocables;
+					$scope.$apply();
+				});
+
+				MessageService.sendMessage({
+					type: 'GET-SHUT-UP-UNTIL'
+				}, function (shutupUntil) {
+					$scope.shutupUntil = shutupUntil;
 					$scope.$apply();
 				});
 			};
@@ -49,6 +57,19 @@
 				}
 
 				return 'in the next couple of days';
+			};
+
+			$scope.showShutupPanel = function () {
+				return $scope.shutupUntil > Date.now();
+			};
+
+			$scope.resetShutupUntilValue = function () {
+				MessageService.sendMessage({
+					type: 'RESET-SHUT-UP-UNTIL'
+				}, function () {
+					// reload
+					document.location.href = '50vad.html';
+				});
 			};
 
 			$scope.deleteVocable = function (timestamp) {

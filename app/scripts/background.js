@@ -303,8 +303,11 @@ chrome.runtime.onConnect.addListener(function (popupPort) {
 	console.log('Popup connected to background page');
 
 	popupPort.onDisconnect.addListener(function () {
-		console.log('Popup disconnected -> storing popup translation');
-		storeVocable(popupTranslation.v, popupTranslation.t, '');
+		if (popupTranslation) {
+			console.log('Popup disconnected -> storing popup translation');
+			storeVocable(popupTranslation.v, popupTranslation.t, '');
+			popupTranslation = null;
+		}
 	});
 });
 

@@ -3,18 +3,12 @@
 var shutupUntil = Date.now(),
 	vocableManager = new window.VocableManager('en', 'de'),
 	levels = {
-		1: 100,
-		2: 200,
-		3: 300,
-		4: 400,
-		5: 500,
-		6: 600
-		// 1: 600 * 1000,					// 10 minutes
-		// 2: 3600 * 1000,					// 1 hour
-		// 3: 5 * 3600 * 1000,				// 5 hours
-		// 4: 24 * 3600 * 1000,			// 24 hours
-		// 5: 25 * 24 * 3600 * 1000,		// 25 days
-		// 6: 120 * 24 * 3600 * 1000		// 120 days
+		1: 600 * 1000,					// 10 minutes
+		2: 3600 * 1000,					// 1 hour
+		3: 5 * 3600 * 1000,				// 5 hours
+		4: 24 * 3600 * 1000,			// 24 hours
+		5: 25 * 24 * 3600 * 1000,		// 25 days
+		6: 120 * 24 * 3600 * 1000		// 120 days
 	},
 	nextPeriod = Date.now();
 

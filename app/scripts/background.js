@@ -245,6 +245,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	} else if (message.type === 'RESET-SHUT-UP-UNTIL') {
 		shutup(0);
 		sendResponse(null);
+	} else if (message.type === 'GET-NEXT-VOCABLE-IN-DATE') {
+		sendResponse(nextPeriod);
 	} else if (message.type === 'DELETE-VOCABLE') {
 		deleteVocable(message.timestamp);
 	}

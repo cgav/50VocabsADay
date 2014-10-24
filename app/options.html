@@ -17,6 +17,11 @@
 			<button ng-click="resetShutupUntilValue()">I'm good now, let's train!</button>
 		</div>
 
+		<div ng-show="showNextVocablePanel() && !showShutupPanel()">
+			<p>Next vocable will be checked at <b>{{ nextVocableIn | date:"MMM d - H:mm" }}</b>.</p>
+			<button ng-click="askNextVocable()">Screw it, ask me now!</button>
+		</div>
+
 		<h2>Vocabulary List</h2>
 		<table>
 			<tr>

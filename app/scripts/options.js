@@ -12,6 +12,7 @@
 		function ($scope, MessageService) {
 			$scope.vocables = {};
 			$scope.shutupUntil = Date.now();
+			$scope.nextVocableIn = Date.now();
 
 			$scope.init = function () {
 				MessageService.sendMessage({
@@ -25,6 +26,13 @@
 					type: 'GET-SHUT-UP-UNTIL'
 				}, function (shutupUntil) {
 					$scope.shutupUntil = shutupUntil;
+					$scope.$apply();
+				});
+
+				MessageService.sendMessage({
+					type: 'GET-NEXT-VOCABLE-IN-DATE'
+				}, function (date) {
+					$scope.nextVocableIn = date;
 					$scope.$apply();
 				});
 			};
@@ -70,6 +78,14 @@
 					// reload
 					document.location.href = '50vad.html';
 				});
+			};
+
+			$scope.showNextVocablePanel = function () {
+				return $scope.nextVocableIn > Date.now();
+			};
+
+			$scope.askNextVocable = function () {
+				document.location.href = '50vad.html';
 			};
 
 			$scope.deleteVocable = function (timestamp) {

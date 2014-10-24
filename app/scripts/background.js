@@ -281,10 +281,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 			});
 		});
 	} else if (message.type === 'CHANGE-POPUP-TRANSLATION') {
-		popupTranslation = {
-			v: message.v,
-			t: message.t
-		};
+		if (message.v && message.t) {
+			popupTranslation = {
+				v: message.v,
+				t: message.t
+			};
+		} else {
+			popupTranslation = null;
+		}
 	}
 
 	return true;

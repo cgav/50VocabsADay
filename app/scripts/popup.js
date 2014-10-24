@@ -15,6 +15,8 @@
 			$scope.entries = [];
 
 			$scope.init = function () {
+				// connecting to background page
+				chrome.runtime.connect();
 			};
 
 			$scope.search = function () {
@@ -34,6 +36,14 @@
 						$scope.entries = $scope.result.dict[0].entry;
 					}
 					$scope.$apply();
+				});
+			};
+
+			$scope.changeTranslation = function (v, t) {
+				MessageService.sendMessage({
+					type: 'CHANGE-POPUP-TRANSLATION',
+					v: v,
+					t: t
 				});
 			};
 

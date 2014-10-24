@@ -10,7 +10,8 @@ var shutupUntil = Date.now(),
 		5: 25 * 24 * 3600 * 1000,		// 25 days
 		6: 120 * 24 * 3600 * 1000		// 120 days
 	},
-	nextPeriod = Date.now();
+	nextPeriod = Date.now(),
+	popupTranslation = null;
 
 // ------------------------------------
 // Helper functions
@@ -73,13 +74,13 @@ var updateShutupUntil = function () {
 	});
 };
 
-var storeVocable = function (vocable, translations, sentence) {
+var storeVocable = function (vocable, translation, sentence) {
 	var record = {};
 
 	// storing selected vocable
 	record['_' + vocable] = {
 		v: vocable,
-		t: translations,
+		t: translation,
 		s: sentence,
 		l: 1,
 		ts: Date.now() + levels[1]
@@ -261,6 +262,11 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 				translationResult: translationResult
 			});
 		});
+	} else if (message.type === 'CHANGE-POPUP-TRANSLATION') {
+		popupTranslation = {
+			v: message.v,
+			t: message.t
+		};
 	}
 
 	return true;
@@ -291,6 +297,15 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
 			}
 		});
 	}
+});
+
+chrome.runtime.onConnect.addListener(function (popupPort) {
+	console.log('Popup connected to background page');
+
+	popupPort.onDisconnect.addListener(function () {
+		console.log('Popup disconnected -> storing popup translation');
+		storeVocable(popupTranslation.v, popupTranslation.t, '');
+	});
 });
 
 // ------------------------------------

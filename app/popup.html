@@ -21,7 +21,7 @@
 			</p>
 			<table>
 				<tr ng-repeat="entry in entries">
-					<td>{{ entry.previous_word }} {{ entry.word }}</td>
+					<td ng-click="changeTranslation(result.dict[0].base_form, entry.word)">{{ entry.previous_word }} {{ entry.word }}</td>
 				</tr>	
 			</table>
 		</div>
@@ -31,11 +31,11 @@
 			</p>
 			<table>
 				<tr>
-					<td>{{ result.sentences[0].trans }}</td>
+					<td ng-click="changeTranslation(result.sentences[0].orig, result.sentences[0].trans)">{{ result.sentences[0].trans }}</td>
 				</tr>	
 			</table>
 		</div>
-		
+
 		<!-- build:js scripts/vendor.js -->
 		<!-- bower:js -->
 		<script src="bower_components/angular/angular.js"></script>

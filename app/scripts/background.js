@@ -3,12 +3,18 @@
 var shutupUntil = Date.now(),
 	vocableManager = new window.VocableManager('en', 'de'),
 	levels = {
-		1: 600 * 1000,
-		2: 3600 * 1000,
-		3: 5 * 3600 * 1000,
-		4: 24 * 3600 * 1000,
-		5: 25 * 24 * 3600 * 1000,
-		6: 120 * 24 * 3600 * 1000
+		1: 100,
+		2: 200,
+		3: 300,
+		4: 400,
+		5: 500,
+		6: 600
+		// 1: 600 * 1000,					// 10 minutes
+		// 2: 3600 * 1000,					// 1 hour
+		// 3: 5 * 3600 * 1000,				// 5 hours
+		// 4: 24 * 3600 * 1000,			// 24 hours
+		// 5: 25 * 24 * 3600 * 1000,		// 25 days
+		// 6: 120 * 24 * 3600 * 1000		// 120 days
 	},
 	nextPeriod = Date.now();
 
@@ -28,6 +34,24 @@ var sendUrl = function (tabId, url) {
 				redirectUrl: url
 			});
 		}
+	});
+};
+
+var deleteVocable = function (timestamp) {
+	// deleting next record
+	chrome.storage.local.get('next', function (nextRecord) {
+		var vocableName;
+
+		if (!nextRecord.next) {
+			return;
+		}
+
+		vocableName = nextRecord.next[timestamp];
+		delete nextRecord.next[timestamp];
+		chrome.storage.local.set(nextRecord, function () {
+			// deleting vocable
+			chrome.storage.local.remove(vocableName);
+		});
 	});
 };
 
@@ -92,6 +116,12 @@ var getNextVocable = function (callback) {
 			if (nextKey) {
 				nextVocable = nextRecord.next[nextKey];
 				chrome.storage.local.get(nextVocable, function (nextVocableObject) {
+					if (!(nextVocable in nextVocableObject)) {
+						// data is inconsistent -> delete record from list
+						deleteVocable(nextKey);
+						return callback(null);
+					}
+
 					return callback(nextVocableObject[nextVocable]);
 				});
 			} else {
@@ -113,31 +143,10 @@ var updateNextObject = function (vocableObject, newTimestamp, callback) {
 			nextRecord.next = {};
 		}
 
-		if (!(vocableObject.ts in nextRecord.next)) {
-			debugger;
-		}
 		delete nextRecord.next[vocableObject.ts];
 		nextRecord.next[newTimestamp] = '_' + vocableObject.v;
 		chrome.storage.local.set(nextRecord, function () {
 			return callback();
-		});
-	});
-};
-
-var deleteVocable = function (timestamp) {
-	// deleting next record
-	chrome.storage.local.get('next', function (nextRecord) {
-		var vocableName;
-
-		if (!nextRecord.next) {
-			return;
-		}
-
-		vocableName = nextRecord.next[timestamp];
-		delete nextRecord.next[timestamp];
-		chrome.storage.local.set(nextRecord, function () {
-			// deleting vocable
-			chrome.storage.local.remove(vocableName);
 		});
 	});
 };
@@ -154,9 +163,7 @@ var updateVocable = function (vocableObject, callback) {
 	// update next object
 	updateNextObject(vocableObject, newTimestamp, function () {
 		// check whether level increased
-		if (vocableObject.l > 1) {
-			vocableObject.ts = newTimestamp;
-		}
+		vocableObject.ts = newTimestamp;
 
 		// updating vocable record
 		recordToStore['_' + vocableObject.v] = vocableObject;
@@ -230,7 +237,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
 		}
 
 		getNextVocable(function (nextVocableObject) {
-			if (shutupUntil - now < 0 && now > nextVocableObject.ts) {
+			if (nextVocableObject && shutupUntil - now < 0 && now > nextVocableObject.ts) {
 				chrome.tabs.update(tabId, {
 					url: '/50vad.html'
 				}, function () {

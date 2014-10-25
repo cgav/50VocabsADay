@@ -30,7 +30,8 @@
 					fromLang: 'en',
 					toLang: 'de'
 				}, function (result) {
-					var baseForm = 'base_form';
+					var baseForm = 'base_form',
+						keys = {};
 
 					if (result.error) {
 						return window.alert(result.error);
@@ -39,10 +40,11 @@
 					// preparsing result entries
 					$scope.entries = [];
 					if (result.translationResult.dict && result.translationResult.dict.length > 0) {
-						result.translationResult.dict.forEach(function (dict) {
-							dict.entry.forEach(function (entry) {
+						result.translationResult.dict[0].entry.forEach(function (entry) {
+							if (!keys[entry.word]) {
+								keys[entry.word] = true;
 								$scope.entries.push(entry.word);
-							});
+							}
 						});
 						$scope.translation.v = result.translationResult.dict[0][baseForm];
 					} else if (result.translationResult.sentences && result.translationResult.sentences.length > 0) {

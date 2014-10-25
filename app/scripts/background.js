@@ -123,7 +123,7 @@ var getTargetLanguage = function (callback) {
 	});
 };
 
-var storeVocable = function (vocable, translation, sentence, callback) {
+var storeVocable = function (vocable, translation, sentence, sourceLanguage, callback) {
 	var record = {};
 
 	// check whether vocable already exists
@@ -145,7 +145,7 @@ var storeVocable = function (vocable, translation, sentence, callback) {
 				l: 1,
 				ts: Date.now() + levels[1],
 				language: {
-					from: vocableManager.getSourceLanguage(),
+					from: sourceLanguage,
 					to: vocableManager.getTargetLanguage()
 				}
 			};
@@ -389,7 +389,7 @@ chrome.runtime.onConnect.addListener(function (popupPort) {
 	popupPort.onDisconnect.addListener(function () {
 		if (popupTranslation) {
 			console.log('Popup disconnected -> storing popup translation');
-			storeVocable(popupTranslation.v, popupTranslation.t, '');
+			storeVocable(popupTranslation.v, popupTranslation.t, '', popupTranslation.sourceLanguage);
 			popupTranslation = null;
 		}
 	});
@@ -400,6 +400,7 @@ chrome.runtime.onConnect.addListener(function (popupPort) {
 // ------------------------------------
 updateShutupUntil();
 updateNextPeriod();
+getTargetLanguage();
 
 // creating context menus
 chrome.contextMenus.create({
@@ -421,7 +422,7 @@ chrome.contextMenus.create({
 
 				chrome.tabs.sendMessage(tab.id, translationMessage, function (_response) {
 					if (_response.store) {
-						storeVocable(translationObject.v, translationObject.t, response.sentence);
+						storeVocable(translationObject.v, translationObject.t, response.sentence, translationObject.sourceLanguage);
 					}
 				});
 			});

@@ -8,7 +8,7 @@
 		me.toLanguage = toLanguage;
 
 		me.getApiUrl = function (vocable) {
-			var url = 'http://translate.google.com/translate_a/t?client=x&text=' + vocable + '&sl=' + this.fromLanguage + '&tl=' + this.toLanguage;
+			var url = 'http://translate.google.com/translate_a/t?client=x&text=' + vocable + '&sl=auto&tl=' + this.toLanguage;
 
 			return window.encodeURI(url);
 		};
@@ -32,7 +32,8 @@
 		me.prepareTranslationObject = function (json) {
 			var translationObject = {
 				v: json.sentences[0].orig,
-				t: json.sentences[0].trans
+				t: json.sentences[0].trans,
+				sourceLanguage: json.src
 			};
 
 			return translationObject;

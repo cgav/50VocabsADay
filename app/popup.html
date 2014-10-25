@@ -21,7 +21,7 @@
 			</p>
 			<table>
 				<tr ng-repeat="entry in entries">
-					<td ng-click="changeTranslation(translation.v, entry)">{{ entry }} <b ng-show="translation.t === entry">(selected)</b></td>
+					<td ng-click="changeTranslation(translation.v, entry, translation.sourceLanguage)">{{ entry }} <b ng-show="translation.t === entry">(selected)</b></td>
 				</tr>	
 			</table>
 

@@ -15,7 +15,8 @@
 			$scope.entries = [];
 			$scope.translation = {
 				v: '',
-				t: ''
+				t: '',
+				sourceLanguage: ''
 			};
 
 			$scope.init = function () {
@@ -37,6 +38,9 @@
 						return window.alert(result.error);
 					}
 
+					// setting source language
+					$scope.translation.sourceLanguage = result.translationResult.src;
+
 					// preparsing result entries
 					$scope.entries = [];
 					if (result.translationResult.dict && result.translationResult.dict.length > 0) {
@@ -57,14 +61,15 @@
 				});
 			};
 
-			$scope.changeTranslation = function (v, t) {
+			$scope.changeTranslation = function (v, t, sourceLanguage) {
 				$scope.translation.t = t;
 				$scope.$apply();
 
 				MessageService.sendMessage({
 					type: 'CHANGE-POPUP-TRANSLATION',
 					v: v,
-					t: t
+					t: t,
+					sourceLanguage: sourceLanguage
 				});
 			};
 

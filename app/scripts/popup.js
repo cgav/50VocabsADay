@@ -37,6 +37,7 @@
 					}
 
 					// preparsing result entries
+					$scope.entries = [];
 					if (result.translationResult.dict && result.translationResult.dict.length > 0) {
 						result.translationResult.dict.forEach(function (dict) {
 							dict.entry.forEach(function (entry) {

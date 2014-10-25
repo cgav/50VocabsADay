@@ -115,6 +115,7 @@ var getTargetLanguage = function (callback) {
 				}
 			});
 		} else {
+			vocableManager.changeTargetLanguage(metaRecord.meta.targetLanguage);
 			if (typeof callback === 'function') {
 				return callback(metaRecord.meta.targetLanguage);
 			}
@@ -142,7 +143,11 @@ var storeVocable = function (vocable, translation, sentence, callback) {
 				t: translation,
 				s: sentence,
 				l: 1,
-				ts: Date.now() + levels[1]
+				ts: Date.now() + levels[1],
+				language: {
+					from: vocableManager.getSourceLanguage(),
+					to: vocableManager.getTargetLanguage()
+				}
 			};
 			chrome.storage.local.set(record, function () {
 

@@ -13,8 +13,16 @@
 			return window.encodeURI(url);
 		};
 
+		me.changeSourceLanguage = function (sourceLanguage) {
+			me.fromLanguage = sourceLanguage;
+		};
+
 		me.changeTargetLanguage = function (targetLanguage) {
 			me.toLanguage = targetLanguage;
+		};
+
+		me.getSourceLanguage = function () {
+			return me.fromLanguage;
 		};
 
 		me.getTargetLanguage = function () {

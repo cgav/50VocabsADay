@@ -11,7 +11,8 @@ var shutupUntil = Date.now(),
 		6: 120 * 24 * 3600 * 1000		// 120 days
 	},
 	nextPeriod = Date.now(),
-	popupTranslation = null;
+	popupTranslation = null,
+	targetLanguage = '';
 
 // ------------------------------------
 // Helper functions
@@ -77,7 +78,7 @@ var updateShutupUntil = function () {
 var updateNextPeriod = function () {
 	chrome.storage.local.get('next', function (nextRecord) {
 		var keys;
-		
+
 		if (!nextRecord.next) {
 			return;
 		}
@@ -85,6 +86,40 @@ var updateNextPeriod = function () {
 		keys = Object.keys(nextRecord.next);
 		if (keys.length > 0) {
 			nextPeriod = parseInt(keys[0]);
+		}
+	});
+};
+
+var changeTargetLanguage = function (targetLanguage, callback) {
+	chrome.storage.local.get('meta', function (metaRecord) {
+		if(!metaRecord.meta) {
+			metaRecord.meta = {};
+		}
+
+		metaRecord.meta.targetLanguage = targetLanguage;
+		chrome.storage.local.set(metaRecord, function () {
+			if (typeof callback === 'function') {
+				return callback();
+			}
+		});
+	});
+};
+
+var getTargetLanguage = function (callback) {
+	chrome.storage.local.get('meta', function (metaRecord) {
+		if (!metaRecord.meta || !metaRecord.meta.targetLanguage) {
+			// default setting
+			targetLanguage = 'de';
+			changeTargetLanguage(targetLanguage, function () {
+				if (typeof callback === 'function') {
+					return callback(targetLanguage);
+				}
+			});
+		} else {
+			targetLanguage = metaRecord.meta.targetLanguage;
+			if (typeof callback === 'function') {
+				return callback(targetLanguage);
+			}
 		}
 	});
 };
@@ -304,6 +339,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		} else {
 			popupTranslation = null;
 		}
+	} else if (message.type === 'CHANGE-TARGET-LANGUAGE') {
+		changeTargetLanguage(message.language, function () {
+			sendResponse();
+		});
+	} else if (message.type === 'GET-TARGET-LANGUAGE') {
+		getTargetLanguage(function (language) {
+			sendResponse(language);
+		});
 	}
 
 	return true;

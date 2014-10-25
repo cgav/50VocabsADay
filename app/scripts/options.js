@@ -13,6 +13,7 @@
 			$scope.vocables = {};
 			$scope.shutupUntil = Date.now();
 			$scope.nextVocableIn = Date.now();
+			$scope.language = 'de';
 
 			$scope.init = function () {
 				MessageService.sendMessage({
@@ -33,6 +34,13 @@
 					type: 'GET-NEXT-VOCABLE-IN-DATE'
 				}, function (date) {
 					$scope.nextVocableIn = date;
+					$scope.$apply();
+				});
+
+				MessageService.sendMessage({
+					type: 'GET-TARGET-LANGUAGE'
+				}, function (language) {
+					$scope.language = language;
 					$scope.$apply();
 				});
 			};
@@ -68,7 +76,6 @@
 			};
 
 			$scope.showShutupPanel = function () {
-				console.log('shutup:', $scope.shutupUntil > Date.now());
 				return $scope.shutupUntil > Date.now();
 			};
 
@@ -82,12 +89,20 @@
 			};
 
 			$scope.showNextVocablePanel = function () {
-				console.log('next vocable wait:', $scope.nextVocableIn > Date.now());
 				return $scope.nextVocableIn > Date.now();
 			};
 
 			$scope.askNextVocable = function () {
 				document.location.href = '50vad.html';
+			};
+
+			$scope.changeTargetLanguage = function () {
+				MessageService.sendMessage({
+					type: 'CHANGE-TARGET-LANGUAGE',
+					language: $scope.language
+				}, function () {
+					console.log('Target language changed to \'' + $scope.language + '\'');
+				});
 			};
 
 			$scope.deleteVocable = function (timestamp) {

@@ -1,127 +1,135 @@
-(function ($) {
+(function (angular) {
 	'use strict';
 
-	// --------------------------------
-	// Variables
-	// --------------------------------
-	var lastCoords = {
-		x: 0,
-		y: 0
-	};
-	var $box;
-	var responseToTranslation;
+	var app = angular.module('fvad-app-modal', []),
+		el = document.createElement('fvad-modal');
 
-	// --------------------------------
-	// Helper functions
-	// --------------------------------
-	var getSentence = function (text, from, to) {
-		var stopChars = ':;.!?',
-			fromIndex = from,
-			toIndex = to,
-			sentence = '';
+	// ------------------------------------------
+	// Directives
+	// ------------------------------------------
+	app.directive('fvadModal', [function () {
+		return {
+			restrict: 'E',
+			link: function (scope) {
+				var getSentence,
+					getSelection,
+					responseToTranslation,
+					lastCoords = {
+						x: 0,
+						y: 0
+					};
 
-		text = text.substr(0, from) + '<b>' + text.substr(from, to - from) + '</b>' + text.substr(to);
-		while (stopChars.indexOf(text[fromIndex - 1]) === -1 && fromIndex > 0) {
-			fromIndex--;
-		}
+				//
+				// Scope definitions
+				//
+				scope.vocable = 'vocable';
+				scope.translation = 'translation';
+				scope.modalDisplayed = false;
+				scope.dontAddTranslation = function () {
+					if (typeof responseToTranslation === 'function') {
+						responseToTranslation({store: false});
+						scope.modalDisplayed = false;
+					}
+				};
 
-		while (stopChars.indexOf(text[toIndex - 1]) === -1 && toIndex < text.length) {
-			toIndex++;
-		}
+				//
+				// Helper functions
+				//
+				getSentence = function (text, from, to) {
+					var stopChars = ':;.!?',
+						fromIndex = from,
+						toIndex = to,
+						sentence = '';
 
-		sentence = text.substr(fromIndex, toIndex - fromIndex);
-		return sentence;
-	};
+					text = text.substr(0, from) + '<b>' + text.substr(from, to - from) + '</b>' + text.substr(to);
+					while (stopChars.indexOf(text[fromIndex - 1]) === -1 && fromIndex > 0) {
+						fromIndex--;
+					}
 
-	var getSelection = function () {
-		var selection = window.getSelection(),
-			from = selection.anchorOffset,
-			to = selection.focusOffset,
-			sentence = getSentence(selection.focusNode.textContent, from, to),
-			totalSentence = '',
-			selectionObject,
-			childNodes = selection.anchorNode.parentNode.childNodes;
+					while (stopChars.indexOf(text[toIndex - 1]) === -1 && toIndex < text.length) {
+						toIndex++;
+					}
 
-		for (var i = 0; i < childNodes.length; i++) {
-			if (childNodes[i] === selection.anchorNode) {
-				totalSentence += sentence;
-			} else {
-				totalSentence += childNodes[i].textContent.trim() + ' ';
-			}
-		}
+					sentence = text.substr(fromIndex, toIndex - fromIndex);
+					return sentence;
+				};
 
-		selectionObject = {
-			selection: selection.toString(),
-			from: from,
-			to: to,
-			sentence: sentence
+				getSelection = function () {
+					var selection = window.getSelection(),
+						from = selection.anchorOffset,
+						to = selection.focusOffset,
+						sentence = getSentence(selection.focusNode.textContent, from, to),
+						totalSentence = '',
+						selectionObject,
+						childNodes = selection.anchorNode.parentNode.childNodes;
+
+					for (var i = 0; i < childNodes.length; i++) {
+						if (childNodes[i] === selection.anchorNode) {
+							totalSentence += sentence;
+						} else {
+							totalSentence += childNodes[i].textContent.trim() + ' ';
+						}
+					}
+
+					selectionObject = {
+						selection: selection.toString(),
+						from: from,
+						to: to,
+						sentence: sentence
+					};
+
+					return selectionObject;
+				};
+
+				//
+				// Event listener
+				//
+				chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+					if (message.type === 'GET-SELECTION') {
+						return sendResponse(getSelection());
+					} else if (message.type === 'TRANSLATION') {
+						scope.vocable = message.vocable;
+						scope.translation = message.translation;
+						scope.modalDisplayed = true;
+						scope.$apply();
+
+						responseToTranslation = sendResponse;
+					}
+					return true;
+				});
+
+				window.oncontextmenu = function (event) {
+					lastCoords.x = event.x;
+					lastCoords.y = event.y;
+				};
+
+				window.document.addEventListener('click', function (event) {
+					if (event.target.className.indexOf('fvad-') === 0) {
+						return;
+					}
+
+					if (scope.modalDisplayed) {
+						if (typeof responseToTranslation === 'function') {
+							responseToTranslation({store: true});
+						}
+						scope.modalDisplayed = false;
+						scope.$apply();
+					}
+				});
+			},
+			template:	'<div class="fvad-box" ng-show="modalDisplayed">' +
+							'<p class="fvad-vocable">{{ vocable }}</p>' +
+							'<p class="fvad-translation">{{ translation }}</p>' +
+							'<div class="fvad-button-area">' +
+								'<button class="fvad-button fvad-dont-add-button" ng-click="dontAddTranslation()">Don\'t add vocable to training</button>' +
+							'</div>' +
+						'</div>'
 		};
+	}]);
 
-		console.log(totalSentence);
-		console.log(selectionObject);
+	// entry point
+	document.body.appendChild(el);
 
-		return selectionObject;
-	};
-
-	var showModal = function (vocable, translation) {
-		$box = $('<div>')
-			.addClass('fvad-box');
-
-		$box.append(
-			$('<p>').text(vocable)
-				.addClass('fvad-vocable')
-		);
-		$box.append(
-			$('<p>').text(translation)
-				.addClass('fvad-translation')
-		);
-		$box.append(
-			$('<div>').addClass('fvad-button-area')
-				.append(
-					$('<button>').text('Don\'t add vocable to training')
-						.addClass('fvad-button')
-						.addClass('fvad-dont-add-button')
-				)
-		);
-
-		$(document.body).append($box);
-	};
-
-	// --------------------------------
-	// Event listener
-	// --------------------------------
-	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-		if (message.type === 'GET-SELECTION') {
-			return sendResponse(getSelection());
-		} else if (message.type === 'TRANSLATION') {
-			showModal(message.vocable, message.translation);
-			responseToTranslation = sendResponse;
-		}
-		return true;
-	});
-
-	window.oncontextmenu = function (event) {
-		lastCoords.x = event.x;
-		lastCoords.y = event.y;
-	};
-
-	$(document).on('click', function (event) {
-		if (event.target.className.indexOf('fvad-') === 0) {
-			return;
-		}
-
-		if ($box) {
-			if (typeof responseToTranslation === 'function') {
-				responseToTranslation({store: true});
-			}
-			$box.remove();
-		}
-	});
-
-	$(document).on('click', '.fvad-dont-add-button', function () {
-		if (typeof responseToTranslation === 'function') {
-			responseToTranslation({store: false});
-			$box.remove();
-		}
-	});
-})(window.$);
+	// bootstrapping angular
+	angular.bootstrap(window.document, ['fvad-app-modal']);
+})(window.angular);

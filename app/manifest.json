@@ -34,7 +34,7 @@
 			"styles/contentscript.css"
 		],
 		"js": [
-			"scripts/vendor/jquery.js",
+			"scripts/vendor/angular.js",
 			"scripts/contentscript.js"
 		],
 		"run_at": "document_end",

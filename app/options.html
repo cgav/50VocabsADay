@@ -38,6 +38,7 @@
 			<tr>
 				<td><b>Vocable</b></td>
 				<td><b>Translation</b></td>
+				<td><b>Languages</b></td>
 				<td><b>Sentence</b></td>
 				<td><b>Will be checked</b></td>
 				<td><b>Level</b></td>
@@ -46,6 +47,7 @@
 			<tr ng-repeat="(timestamp, vocableObject) in vocables" ng-class-odd="'odd'">
 				<td class="vocable">{{ vocableObject.v.substr(1) }}</td>
 				<td class="translation">{{ vocableObject.t }}</td>
+				<td class="languages">{{ vocableObject.language.from }} &gt; {{ vocableObject.language.to }}</td>
 				<td class="sentence" ng-bind-html="vocableObject.s"></td>
 				<td class="date">{{ convertToReadable(timestamp) }}</td>
 				<td class="level">{{ vocableObject.l }}</td>

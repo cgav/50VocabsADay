@@ -254,6 +254,7 @@ var getAllVocables = function (callback) {
 				vocables[vocableObject[vocable].ts].l = vocableObject[vocable].l;
 				vocables[vocableObject[vocable].ts].t = vocableObject[vocable].t;
 				vocables[vocableObject[vocable].ts].s = vocableObject[vocable].s;
+				vocables[vocableObject[vocable].ts].language = vocableObject[vocable].language;
 			}
 			dfd.resolve();
 		});

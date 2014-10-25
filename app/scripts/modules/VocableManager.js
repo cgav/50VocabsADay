@@ -13,6 +13,14 @@
 			return window.encodeURI(url);
 		};
 
+		me.changeTargetLanguage = function (targetLanguage) {
+			me.toLanguage = targetLanguage;
+		};
+
+		me.getTargetLanguage = function () {
+			return me.toLanguage;
+		};
+
 		me.prepareTranslationObject = function (json) {
 			var translationObject = {
 				v: json.sentences[0].orig,

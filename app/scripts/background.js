@@ -11,8 +11,7 @@ var shutupUntil = Date.now(),
 		6: 120 * 24 * 3600 * 1000		// 120 days
 	},
 	nextPeriod = Date.now(),
-	popupTranslation = null,
-	targetLanguage = '';
+	popupTranslation = null;
 
 // ------------------------------------
 // Helper functions
@@ -97,6 +96,7 @@ var changeTargetLanguage = function (targetLanguage, callback) {
 		}
 
 		metaRecord.meta.targetLanguage = targetLanguage;
+		vocableManager.changeTargetLanguage(targetLanguage);
 		chrome.storage.local.set(metaRecord, function () {
 			if (typeof callback === 'function') {
 				return callback();
@@ -109,16 +109,14 @@ var getTargetLanguage = function (callback) {
 	chrome.storage.local.get('meta', function (metaRecord) {
 		if (!metaRecord.meta || !metaRecord.meta.targetLanguage) {
 			// default setting
-			targetLanguage = 'de';
-			changeTargetLanguage(targetLanguage, function () {
+			changeTargetLanguage(vocableManager.getTargetLanguage(), function () {
 				if (typeof callback === 'function') {
-					return callback(targetLanguage);
+					return callback(vocableManager.getTargetLanguage());
 				}
 			});
 		} else {
-			targetLanguage = metaRecord.meta.targetLanguage;
 			if (typeof callback === 'function') {
-				return callback(targetLanguage);
+				return callback(metaRecord.meta.targetLanguage);
 			}
 		}
 	});

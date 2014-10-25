@@ -7,8 +7,16 @@
 		me.fromLanguage = fromLanguage;
 		me.toLanguage = toLanguage;
 
-		me.getApiUrl = function (vocable) {
-			var url = 'http://translate.google.com/translate_a/t?client=x&text=' + vocable + '&sl=auto&tl=' + this.toLanguage;
+		me.getApiUrl = function (vocable, fromLang, toLang) {
+			if (!fromLang) {
+				fromLang = 'auto';
+			}
+			if (!toLang) {
+				toLang = me.toLanguage;
+			}
+
+			var url = 'http://translate.google.com/translate_a/t?client=x&text=' + vocable + '&sl=' + fromLang + '&tl=' + toLang;
+			console.log(url);
 
 			return window.encodeURI(url);
 		};
@@ -84,8 +92,8 @@
 			});
 		};
 
-		me.getRawTranslation = function (vocable, callback) {
-			var url = me.getApiUrl(vocable);
+		me.getRawTranslation = function (vocable, fromLang, toLang, callback) {
+			var url = me.getApiUrl(vocable, fromLang, toLang);
 
 			me.ajax(url, function (error, result) {
 				var json;

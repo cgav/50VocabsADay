@@ -290,8 +290,8 @@ var getAllVocables = function (callback) {
 	});
 };
 
-var searchVocable = function (vocable, callback) {
-	vocableManager.getRawTranslation(vocable, callback);
+var searchVocable = function (vocable, fromLang, toLang, callback) {
+	vocableManager.getRawTranslation(vocable, fromLang, toLang, callback);
 };
 
 // ------------------------------------
@@ -327,7 +327,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 	} else if (message.type === 'DELETE-VOCABLE') {
 		deleteVocable(message.timestamp);
 	} else if (message.type === 'SEARCH-VOCABLE') {
-		searchVocable(message.v, function (error, translationResult) {
+		searchVocable(message.v, message.fromLang, message.toLang, function (error, translationResult) {
 			console.log(translationResult);
 			sendResponse({
 				error: error,

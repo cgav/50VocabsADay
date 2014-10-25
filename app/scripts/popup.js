@@ -13,6 +13,8 @@
 			$scope.q = '';
 			$scope.result = {};
 			$scope.entries = [];
+			$scope.fromLang = 'auto';
+			$scope.toLang = 'en';
 			$scope.translation = {
 				v: '',
 				t: '',
@@ -22,14 +24,21 @@
 			$scope.init = function () {
 				// connecting to background page
 				chrome.runtime.connect();
+
+				MessageService.sendMessage({
+					type: 'GET-TARGET-LANGUAGE'
+				}, function (language) {
+					console.log('init toLang', language);
+					$scope.toLang = language;
+				});
 			};
 
 			$scope.search = function () {
 				MessageService.sendMessage({
 					type: 'SEARCH-VOCABLE',
 					v: $scope.q,
-					fromLang: 'en',
-					toLang: 'de'
+					fromLang: $scope.fromLang,
+					toLang: $scope.toLang
 				}, function (result) {
 					var baseForm = 'base_form',
 						keys = {};
@@ -38,8 +47,11 @@
 						return window.alert(result.error);
 					}
 
+					console.log(result.translationResult);
+
 					// setting source language
 					$scope.translation.sourceLanguage = result.translationResult.src;
+					$scope.fromLang = result.translationResult.src;
 
 					// preparsing result entries
 					$scope.entries = [];
@@ -81,8 +93,42 @@
 				return event.keyCode === 13;
 			};
 
+			$scope.fromLanguageSelected = function (language) {
+				console.log('from language selected', language);
+				$scope.fromLang = language;
+				$scope.search();
+			};
+
+			$scope.toLanguageSelected = function (language) {
+				console.log('to language selected', language);
+				$scope.toLang = language;
+				$scope.search();
+			};
+
 			// Entry Point
 			$scope.init();
 		}
 	]);
+
+	// ------------------------------------------
+	// Directives
+	// ------------------------------------------
+	app.directive('languageSelector', [function () {
+		return {
+			restrict: 'A',
+			templateUrl: '/scripts/templates/language-selection.html',
+			scope: {
+				languageSelected: '&languageSelector',
+				selection: '='
+			},
+			link: function (scope) {
+				scope.changeSelection = function (selection) {
+					console.log('scope.changeSelection called', selection);
+					scope.languageSelected({
+						language: selection
+					});
+				};
+			}
+		};
+	}]);
 })(window.angular);

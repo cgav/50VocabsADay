@@ -7,6 +7,7 @@
 		return {
 			restrict: 'A',
 			template:	'<select ng-change="changeSelection(selection)" ng-model="selection">' +
+							'<option value="da">Danish</option>' +
 							'<option value="de">German</option>' +
 							'<option value="en">English</option>' +
 							'<option value="es">Espa&#241;ol</option>' +

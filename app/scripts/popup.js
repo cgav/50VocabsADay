@@ -68,7 +68,7 @@
 						$scope.translation.v = result.translationResult.sentences[0].orig;
 					}
 					$scope.translation.t = $scope.entries[0];
-					$scope.changeTranslation($scope.translation.v, $scope.translation.t);
+					$scope.changeTranslation($scope.translation.v, $scope.translation.t, $scope.fromLang);
 					$scope.$apply();
 				});
 			};
@@ -83,6 +83,8 @@
 					t: t,
 					sourceLanguage: sourceLanguage
 				});
+
+				console.log('sending ', sourceLanguage);
 			};
 
 			$scope.showTranslation = function () {

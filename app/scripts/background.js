@@ -338,7 +338,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		if (message.v && message.t) {
 			popupTranslation = {
 				v: message.v,
-				t: message.t
+				t: message.t,
+				sourceLanguage: message.sourceLanguage
 			};
 		} else {
 			popupTranslation = null;

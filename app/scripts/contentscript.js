@@ -107,11 +107,7 @@
 					var getSentence,
 						getSelection,
 						hideModal,
-						responseToTranslation,
-						lastCoords = {
-							x: 0,
-							y: 0
-						};
+						responseToTranslation;
 
 					//
 					// Scope definitions
@@ -120,6 +116,7 @@
 					scope.translation = 'translation';
 					scope.modalDisplayed = false;
 					scope.fromLang = 'auto';
+					scope.toLang = 'en';
 					scope.dontAddTranslation = function () {
 						if (typeof responseToTranslation === 'function') {
 							responseToTranslation({store: false});
@@ -135,6 +132,12 @@
 							console.log('init toLang', language);
 							scope.toLang = language;
 						});
+					};
+					scope.fromLanguageSelected = function (language) {
+						console.log('from selected language', language);
+					};
+					scope.toLanguageSelected = function (language) {
+						console.log('to selected language', language);
 					};
 
 					//
@@ -203,6 +206,7 @@
 						} else if (message.type === 'TRANSLATION') {
 							scope.vocable = message.vocable;
 							scope.translation = message.translation;
+							scope.fromLang = message.sourceLanguage;
 							DisplayService.showOverlay();
 							DisplayService.registerHideModalCallback(hideModal);
 
@@ -214,11 +218,6 @@
 						return true;
 					});
 
-					window.oncontextmenu = function (event) {
-						lastCoords.x = event.x;
-						lastCoords.y = event.y;
-					};
-
 					//
 					// Entry point
 					//
@@ -227,7 +226,10 @@
 				template:	'<div class="fvad-box" ng-show="modalDisplayed">' +
 								'<p class="fvad-vocable">{{ vocable }}</p>' +
 								'<p class="fvad-translation">{{ translation }}</p>' +
-								'<div language-selector="fromLanguageSelected(language)" selection="fromLang"></div>' +
+								'<div>' +
+									'<span language-selector="fromLanguageSelected(language)" selection="fromLang"></span> &gt; ' +
+									'<span language-selector="toLanguageSelected(language)" selection="toLang"></span>' +
+								'</div>' +
 								'<div class="fvad-button-area">' +
 									'<button class="fvad-button fvad-dont-add-button" ng-click="dontAddTranslation()">Don\'t add vocable to training</button>' +
 								'</div>' +

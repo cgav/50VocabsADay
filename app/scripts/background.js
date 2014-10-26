@@ -417,7 +417,8 @@ chrome.contextMenus.create({
 				var translationMessage = {
 						type: 'TRANSLATION',
 						vocable: translationObject.v,
-						translation: translationObject.t
+						translation: translationObject.t,
+						sourceLanguage: translationObject.sourceLanguage
 					};
 
 				chrome.tabs.sendMessage(tab.id, translationMessage, function (_response) {

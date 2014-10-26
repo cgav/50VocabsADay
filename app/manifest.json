@@ -35,6 +35,8 @@
 		],
 		"js": [
 			"scripts/vendor/angular.js",
+			"scripts/ng-modules/language-selector.js",
+			"scripts/ng-modules/MessageService.js",
 			"scripts/contentscript.js"
 		],
 		"run_at": "document_end",

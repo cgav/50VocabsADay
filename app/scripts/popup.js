@@ -1,7 +1,7 @@
 (function (angular) {
 	'use strict';
 
-	var app = angular.module('50vad-popup-app', ['MessageServiceModule', 'ngSanitize']);
+	var app = angular.module('50vad-popup-app', ['MessageServiceModule', 'ngSanitize', 'language-selector']);
 
 	// ------------------------------------------
 	// Controllers
@@ -109,26 +109,4 @@
 			$scope.init();
 		}
 	]);
-
-	// ------------------------------------------
-	// Directives
-	// ------------------------------------------
-	app.directive('languageSelector', [function () {
-		return {
-			restrict: 'A',
-			templateUrl: '/scripts/templates/language-selection.html',
-			scope: {
-				languageSelected: '&languageSelector',
-				selection: '='
-			},
-			link: function (scope) {
-				scope.changeSelection = function (selection) {
-					console.log('scope.changeSelection called', selection);
-					scope.languageSelected({
-						language: selection
-					});
-				};
-			}
-		};
-	}]);
 })(window.angular);

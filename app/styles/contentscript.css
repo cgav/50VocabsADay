@@ -33,14 +33,19 @@
 	text-align: center !important;
 }
 .fvad-box button.fvad-button {
+	background-image: none !important;
+	border-radius: 0 !important;
 	font-family: 'Arial', sans-serif !important;
 	font-size: 12px !important;
+	font-weight: normal !important;
 	border: 0 !important;
 	background-color: #fb8d3c !important;
 	color: #fff !important;
 	outline: none !important;
 	padding: 8px 20px !important;
 	cursor: pointer !important;
+	height: 30px !important;
+	text-shadow: none !important;
 
 	margin: 0 auto !important;
 }

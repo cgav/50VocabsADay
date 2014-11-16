@@ -64,17 +64,18 @@
 					// Scope definitions
 					//
 					scope.overlayDisplayed = false;
+					// scope.$apply();
 
 					//
 					// Helper functions
 					//
 					hideOverlay = function () {
 						scope.overlayDisplayed = false;
-						// scope.$apply();
+						scope.$apply();
 					};
 					showOverlay = function () {
 						scope.overlayDisplayed = true;
-						// scope.$apply();
+						scope.$apply();
 					};
 
 					//
@@ -129,7 +130,6 @@
 						MessageService.sendMessage({
 							type: 'GET-TARGET-LANGUAGE'
 						}, function (language) {
-							console.log('init toLang', language);
 							scope.toLang = language;
 						});
 					};
@@ -238,11 +238,13 @@
 		}
 	]);
 
-	// entry point
-	fvad.appendChild(elOverlay);
-	fvad.appendChild(el);
-	document.body.appendChild(fvad);
+	if (document.contentType === 'text/html') {
+		// entry point
+		fvad.appendChild(elOverlay);
+		fvad.appendChild(el);
+		document.body.appendChild(fvad);
 
-	// bootstrapping angular
-	angular.bootstrap(fvad, ['fvad-app-modal']);
+		// bootstrapping angular
+		angular.bootstrap(fvad, ['fvad-app-modal']);
+	}
 })(window.angular);

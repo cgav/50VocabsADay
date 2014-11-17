@@ -8,6 +8,7 @@ package/
 test/bower_components/
 app/bower_components/
 _res/
+app/test.html
 
 .tmp
 .editorconfig

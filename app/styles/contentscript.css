@@ -53,6 +53,11 @@
 	background-color: #d47834 !important;
 }
 
+.fvad-box .fvad-title {
+	float: left;
+	height: 45px;
+}
+
 .fvad-overlay {
 	position: fixed;
 	top: 0;

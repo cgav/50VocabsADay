@@ -224,7 +224,7 @@
 					//
 					scope.init();
 				},
-				template:	'<div class="fvad-box" ng-show="!modalDisplayed">' +
+				template:	'<div class="fvad-box" ng-show="modalDisplayed">' +
 								'<p class="fvad-vocable">{{ vocable }}</p>' +
 								'<p class="fvad-translation">{{ translation }}</p>' +
 								'<div>' +

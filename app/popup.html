@@ -20,9 +20,12 @@
 				Vocable: <b>{{ translation.v }}</b>
 			</p>
 			<table>
-				<tr ng-repeat="entry in entries">
-					<td ng-click="changeTranslation(translation.v, entry, translation.sourceLanguage)">{{ entry }} <b ng-show="translation.t === entry">(selected)</b></td>
-				</tr>	
+				<section ng-repeat="section in translationObject.sections">
+					<p >{{ section.name }}</p>
+					<ul>
+						<li ng-repeat="t in section.translations" ng-click="changeSelectedVocable(section.name, t)">{{ t }} <span ng-show="isSelected(section.name, t)">(will be added to trainer)</span></li>
+					</ul>
+				</section>
 			</table>
 
 			<div>
@@ -31,7 +34,7 @@
 				<div language-selector="toLanguageSelected(language)" selection="toLang"></div>
 			</div>
 
-			<button ng-click="changeTranslation(null, null, null)">Don&quot;t add vocable to training</button>
+			<button ng-click="changeTranslation(null, null)">Don&quot;t add vocable to training</button>
 		</div>
 
 		<a href="options.html" target="_blank">Show vocabulary list</a>

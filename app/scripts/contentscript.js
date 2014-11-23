@@ -109,7 +109,8 @@
 					var getSentence,
 						getSelection,
 						hideModal,
-						responseToTranslation;
+						responseToTranslation,
+						selectedVocable;
 
 					//
 					// Scope definitions
@@ -135,10 +136,22 @@
 						});
 					};
 					scope.fromLanguageSelected = function (language) {
-						console.log('from selected language', language);
+						if (typeof responseToTranslation === 'function') {
+							responseToTranslation({
+								changeLanguage: true,
+								fromLang: language
+							});
+						}
 					};
 					scope.toLanguageSelected = function (language) {
 						console.log('to selected language', language);
+					};
+					scope.isSelected = function (section, translation) {
+						return selectedVocable.section === section && selectedVocable.translation === translation;
+					};
+					scope.changeSelectedVocable = function (section, translation) {
+						selectedVocable.section = section;
+						selectedVocable.translation = translation;
 					};
 
 					//
@@ -192,7 +205,10 @@
 
 					hideModal = function () {
 						if (typeof responseToTranslation === 'function') {
-							responseToTranslation({store: true});
+							responseToTranslation({
+								store: true,
+								translation: selectedVocable.translation
+							});
 						}
 						scope.modalDisplayed = false;
 						scope.$apply();
@@ -205,9 +221,12 @@
 						if (message.type === 'GET-SELECTION') {
 							return sendResponse(getSelection());
 						} else if (message.type === 'TRANSLATION') {
-							scope.vocable = message.vocable;
-							scope.translation = message.translation;
-							scope.fromLang = message.sourceLanguage;
+							scope.translationObject = message.translationObject;
+							scope.fromLang = message.translationObject.sourceLanguage;
+							selectedVocable = {
+								section: message.translationObject.sections[0].name,
+								translation: message.translationObject.sections[0].translations[0]
+							};
 							DisplayService.showOverlay();
 							DisplayService.registerHideModalCallback(hideModal);
 
@@ -225,12 +244,19 @@
 					scope.init();
 				},
 				template:	'<div class="fvad-box" ng-show="modalDisplayed">' +
-								'<p class="fvad-vocable">{{ vocable }}</p>' +
-								'<p class="fvad-translation">{{ translation }}</p>' +
-								'<div>' +
-									'<span language-selector="fromLanguageSelected(language)" selection="fromLang"></span> &gt; ' +
-									'<span language-selector="toLanguageSelected(language)" selection="toLang"></span>' +
+								'<div class="fvad-title">' +
+									'<div class="fvad-vocable">{{ translationObject.v }}</div>' +
+									'<div>' +
+										'<span language-selector="fromLanguageSelected(language)" selection="fromLang"></span> &gt; ' +
+										'<span language-selector="toLanguageSelected(language)" selection="toLang"></span>' +
+									'</div>' +
 								'</div>' +
+								'<section class="fvad-vocable-section" ng-repeat="section in translationObject.sections">' +
+									'<p class="fvad-section-name">{{ section.name }}</p>' +
+									'<ul>' +
+										'<li ng-repeat="t in section.translations" ng-click="changeSelectedVocable(section.name, t)">{{ t }} <span class="fvad-comment" ng-show="isSelected(section.name, t)">(will be added to trainer)</span></li>' +
+									'</ul>' +
+								'</section>' +
 								'<div class="fvad-button-area">' +
 									'<button class="fvad-button fvad-dont-add-button" ng-click="dontAddTranslation()">Don\'t add vocable to training</button>' +
 								'</div>' +

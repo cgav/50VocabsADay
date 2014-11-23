@@ -10,9 +10,9 @@
 		'$scope',
 		'MessageService',
 		function ($scope, MessageService) {
+			var selectedVocable = {};
+
 			$scope.q = '';
-			$scope.result = {};
-			$scope.entries = [];
 			$scope.fromLang = 'auto';
 			$scope.toLang = 'en';
 			$scope.translation = {
@@ -20,6 +20,7 @@
 				t: '',
 				sourceLanguage: ''
 			};
+			$scope.translationObject = {};
 
 			$scope.init = function () {
 				// connecting to background page
@@ -40,55 +41,39 @@
 					fromLang: $scope.fromLang,
 					toLang: $scope.toLang
 				}, function (result) {
-					var baseForm = 'base_form',
-						keys = {};
-
 					if (result.error) {
 						return window.alert(result.error);
 					}
 
-					console.log(result.translationResult);
+					$scope.translationObject = result.translationResult;
 
 					// setting source language
-					$scope.translation.sourceLanguage = result.translationResult.src;
-					$scope.fromLang = result.translationResult.src;
+					console.log(result.translationResult);
+					$scope.fromLang = result.translationResult.sourceLanguage;
 
-					// preparsing result entries
-					$scope.entries = [];
-					if (result.translationResult.dict && result.translationResult.dict.length > 0) {
-						result.translationResult.dict[0].entry.forEach(function (entry) {
-							if (!keys[entry.word]) {
-								keys[entry.word] = true;
-								$scope.entries.push(entry.word);
-							}
-						});
-						$scope.translation.v = result.translationResult.dict[0][baseForm];
-					} else if (result.translationResult.sentences && result.translationResult.sentences.length > 0) {
-						$scope.entries.push(result.translationResult.sentences[0].trans);
-						$scope.translation.v = result.translationResult.sentences[0].orig;
-					}
-					$scope.translation.t = $scope.entries[0];
-					$scope.changeTranslation($scope.translation.v, $scope.translation.t, $scope.fromLang);
+					$scope.changeSelectedVocable(result.translationResult.sections[0].name, result.translationResult.sections[0].translations[0]);
 					$scope.$apply();
 				});
 			};
 
-			$scope.changeTranslation = function (v, t, sourceLanguage) {
-				$scope.translation.t = t;
-				$scope.$apply();
+			$scope.isSelected = function (section, translation) {
+				return selectedVocable.section === section && selectedVocable.translation === translation;
+			};
+
+			$scope.changeSelectedVocable = function (section, translation) {
+				selectedVocable.section = section;
+				selectedVocable.translation = translation;
 
 				MessageService.sendMessage({
 					type: 'CHANGE-POPUP-TRANSLATION',
-					v: v,
-					t: t,
-					sourceLanguage: sourceLanguage
+					v: $scope.translationObject.v,
+					t: translation,
+					sourceLanguage: $scope.translationObject.sourceLanguage
 				});
-
-				console.log('sending ', sourceLanguage);
 			};
 
 			$scope.showTranslation = function () {
-				return $scope.entries.length > 0;
+				return $scope.translationObject.sections && $scope.translationObject.sections.length > 0;
 			};
 
 			$scope.isReturn = function (event) {
@@ -96,13 +81,11 @@
 			};
 
 			$scope.fromLanguageSelected = function (language) {
-				console.log('from language selected', language);
 				$scope.fromLang = language;
 				$scope.search();
 			};
 
 			$scope.toLanguageSelected = function (language) {
-				console.log('to language selected', language);
 				$scope.toLang = language;
 				$scope.search();
 			};

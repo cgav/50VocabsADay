@@ -40,9 +40,37 @@
 		me.prepareTranslationObject = function (json) {
 			var translationObject = {
 				v: json.sentences[0].orig,
-				t: json.sentences[0].trans,
-				sourceLanguage: json.src
+				sourceLanguage: json.src,
+				sections: []
 			};
+
+			if (json.dict) {
+				json.dict.forEach(function (entry) {
+					var section = {
+						name: entry.pos,
+						translations: []
+					};
+
+					entry.entry.forEach(function (translation, index) {
+						if (index > 3) {
+							return;
+						}
+
+						var t = translation.previous_word || '';
+						t += ' ' + translation.word;
+						t = t.trim();
+
+						section.translations.push(t);
+					});
+
+					translationObject.sections.push(section);
+				});
+			} else {
+				translationObject.sections.push({
+					name: 'sentence',
+					translations: [json.sentences[0].trans]
+				});
+			}
 
 			return translationObject;
 		};
@@ -75,8 +103,8 @@
 			request.send();
 		};
 
-		me.getTranslation = function (vocable, callback) {
-			var url = me.getApiUrl(vocable);
+		me.getTranslation = function (vocable, fromLang, toLang, callback) {
+			var url = me.getApiUrl(vocable, fromLang, toLang);
 
 			me.ajax(url, function (error, result) {
 				var json,
@@ -89,21 +117,6 @@
 				json = JSON.parse(result);
 				translationObject = me.prepareTranslationObject(json);
 				return callback(null, translationObject);
-			});
-		};
-
-		me.getRawTranslation = function (vocable, fromLang, toLang, callback) {
-			var url = me.getApiUrl(vocable, fromLang, toLang);
-
-			me.ajax(url, function (error, result) {
-				var json;
-
-				if (error) {
-					return callback(error, null);
-				}
-
-				json = JSON.parse(result);
-				return callback(null, json);
 			});
 		};
 

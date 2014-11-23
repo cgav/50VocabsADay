@@ -291,7 +291,7 @@ var getAllVocables = function (callback) {
 };
 
 var searchVocable = function (vocable, fromLang, toLang, callback) {
-	vocableManager.getRawTranslation(vocable, fromLang, toLang, callback);
+	vocableManager.getTranslation(vocable, fromLang, toLang, callback);
 };
 
 // ------------------------------------
@@ -409,25 +409,42 @@ chrome.contextMenus.create({
 	title: 'Translate with 50VocabsADay',
 	contexts: ['selection'],
 	onclick: function (info, tab) {
-		var message = {
-			type: 'GET-SELECTION'
-		};
+		var searchFn,
+			message = {
+				type: 'GET-SELECTION'
+			};
 
-		chrome.tabs.sendMessage(tab.id, message, function (response) {
-			vocableManager.getTranslation(response.selection, function (err, translationObject) {
+		searchFn = function (vocable, sentence, fromLang, toLang) {
+			searchVocable(vocable, fromLang, toLang, function (error, translationObject) {
 				var translationMessage = {
-						type: 'TRANSLATION',
-						vocable: translationObject.v,
-						translation: translationObject.t,
-						sourceLanguage: translationObject.sourceLanguage
-					};
+					type: 'TRANSLATION',
+					translationObject: translationObject
+				};
 
-				chrome.tabs.sendMessage(tab.id, translationMessage, function (_response) {
-					if (_response.store) {
-						storeVocable(translationObject.v, translationObject.t, response.sentence, translationObject.sourceLanguage);
+				chrome.tabs.sendMessage(tab.id, translationMessage, function (response) {
+					if (response.changeLanguage) {
+						searchFn(vocable, sentence, response.fromLang, response, toLang);
+					} else if (response.store) {
+						storeVocable(vocable, response.translation, sentence, translationObject.sourceLanguage);
 					}
 				});
 			});
+		};
+
+		chrome.tabs.sendMessage(tab.id, message, function (response) {
+			searchFn(response.selection, response.sentence, vocableManager.getSourceLanguage(), vocableManager.getTargetLanguage());
+			// vocableManager.getTranslation(response.selection, function (err, translationObject) {
+			// 	var translationMessage = {
+			// 			type: 'TRANSLATION',
+			// 			translationObject: translationObject
+			// 		};
+
+			// 	chrome.tabs.sendMessage(tab.id, translationMessage, function (_response) {
+			// 		if (_response.store) {
+			// 			storeVocable(translationObject.v, translationObject.t, response.sentence, translationObject.sourceLanguage);
+			// 		}
+			// 	});
+			// });
 		});
 	}
 });

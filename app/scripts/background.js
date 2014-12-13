@@ -127,6 +127,7 @@ var storeVocable = function (vocable, translation, sentence, sourceLanguage, cal
 	var record = {};
 
 	// check whether vocable already exists
+	vocable = vocable.trim();
 	chrome.storage.local.get('_' + vocable, function (vocableRecord) {
 		if (vocableRecord['_' + vocable]) {
 			console.log('Vocable \'' + vocable + '\' does already exist. It will not be stored.');

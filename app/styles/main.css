@@ -100,3 +100,22 @@ a {
 .footer p {
 	color: #333;
 }
+
+.level-display svg {
+    -webkit-filter: drop-shadow(3px 3px 5px #AAA);
+    fill: #D0021B;
+    position: absolute;
+    top: 0;
+    left: 80%;
+}
+
+.level-display svg > text {
+    font-size: 14px;
+    font-family: sans-serif;
+    text-shadow: 2px 2px 5px #333;
+    fill: #fff;
+}
+
+.level-display svg > text.number {
+    font-size: 32px;
+}

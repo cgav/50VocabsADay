@@ -10,6 +10,13 @@
 		<!-- endbuild -->
 	</head>
 	<body ng-controller="VocabularyController">
+		<div class="level-display">
+			<svg height="100" width="75">
+				<path d="M0,0 L0,100 L38,75 L75,100 L75,0 Z"/>
+				<text x="15" y="20">LEVEL</text>
+				<text class="number" x="28" y="55">{{ vocable.l }}</text>
+			</svg>
+		</div>
 		<div class="center-wrapper">
 			<div class="vocable-area">
 				<p>{{ vocable.t }}</p>

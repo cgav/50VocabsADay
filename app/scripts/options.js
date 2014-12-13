@@ -4,6 +4,13 @@
 	var app = angular.module('50vad-options-app', ['MessageServiceModule', 'ngSanitize']);
 
 	// ------------------------------------------
+	// Configs
+	// ------------------------------------------
+	app.config(['$compileProvider', function ($compileProvider) {
+		$compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+	}]);
+	
+	// ------------------------------------------
 	// Controllers
 	// ------------------------------------------
 	app.controller('OptionsController', [

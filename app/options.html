@@ -47,7 +47,7 @@
 			<tr ng-repeat="(timestamp, vocableObject) in vocables" ng-class-odd="'odd'">
 				<td class="vocable">{{ vocableObject.v.substr(1) }}</td>
 				<td class="translation">{{ vocableObject.t }}</td>
-				<td class="languages">{{ vocableObject.language.from }} &gt; {{ vocableObject.language.to }}</td>
+				<td class="languages"><img ng-src="images/flags/{{ vocableObject.language.from }}.png"> <span>&gt;</span> <img ng-src="images/flags/{{ vocableObject.language.to }}.png"></td>
 				<td class="sentence" ng-bind-html="vocableObject.s"></td>
 				<td class="date">{{ convertToReadable(timestamp) }}</td>
 				<td class="level">{{ vocableObject.l }}</td>

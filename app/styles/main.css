@@ -119,3 +119,12 @@ a {
 .level-display svg > text.number {
     font-size: 32px;
 }
+
+.languages {
+	margin: 10px auto;
+	text-align: center;
+}
+
+.languages img {
+	vertical-align: middle;
+}

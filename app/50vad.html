@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="50vad-app">
+<html ng-app="50vad-app" ng-csp>
 	<head>
 		<!-- build:css styles/vendor.css -->
 		<!-- bower:css -->
@@ -20,6 +20,9 @@
 		<div class="center-wrapper">
 			<div class="vocable-area">
 				<p>{{ vocable.t }}</p>
+				<div class="languages">
+					<img src="images/flags/{{ vocable.language.to }}.png"> <span>&gt;</span> <img src="images/flags/{{ vocable.language.from }}.png">
+				</div>
 			</div>
 			<div class="translation-area">
 				<input type="text" class="translation" placeholder="translation" ng-model="translation" ng-class="{ correct: isCorrect, incorrect: isIncorrect }" ng-keyup="isReturn($event) && checkTranslation()" sync-focus-with="isFocused" />

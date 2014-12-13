@@ -4,6 +4,13 @@
 	var app = angular.module('50vad-app', ['MessageServiceModule', 'ngSanitize']);
 
 	// ------------------------------------------
+	// Configs
+	// ------------------------------------------
+	app.config(['$compileProvider', function ($compileProvider) {
+		$compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+	}]);
+
+	// ------------------------------------------
 	// Controllers
 	// ------------------------------------------
 	app.controller('VocabularyController', [
@@ -36,7 +43,7 @@
 			$scope.checkTranslation = function () {
 				if ($scope.translation === $scope.vocable.v) {
 					$scope.isCorrect = true;
-					
+
 					if (!$scope.isIncorrect && !$scope.hintGiven) {
 						// increasing level only if user made no mistake
 						$scope.vocable.l++;

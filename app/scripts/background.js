@@ -369,14 +369,15 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
 			' seconds.'
 		);
 
-		if (changeInfo.url.indexOf('chrome-extension://') === 0 || now < nextPeriod) {
+		if (changeInfo.url.indexOf('chrome://newtab') === 0 || changeInfo.url.indexOf('chrome-extension://') === 0 || now < nextPeriod) {
 			return;
 		}
 
 		getNextVocable(function (nextVocableObject) {
 			if (nextVocableObject && shutupUntil - now < 0 && now > nextVocableObject.ts) {
 				chrome.tabs.update(tabId, {
-					url: '/50vad.html'
+					url: '/50vad.html',
+					highlighted: true
 				}, function () {
 					sendUrl(tabId, changeInfo.url);
 				});

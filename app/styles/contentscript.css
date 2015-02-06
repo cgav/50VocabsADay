@@ -90,3 +90,29 @@
 .fvad-vocable-section li:hover .fvad-comment {
 	color: #fff;
 }
+
+a.fvad-done,
+a.fvad-add-button {
+	color: #fff !important;
+	border-radius: 5px !important;
+	background-color: #fb8d3c !important;
+	padding: 2px 6px !important;
+	margin-right: 4px !important;
+}
+a.fvad-add-button:hover {
+	text-decoration: none !important;
+}
+a.fvad-add-button:active {
+	background-color: #d47834 !important;
+}
+
+a.fvad-done {
+	color: #fff !important;
+	border-radius: 5px !important;
+	background-color: #6db803 !important;
+	padding: 2px 6px !important;
+	margin-right: 4px !important;
+}
+a.fvad-done:hover {
+	text-decoration: none !important;
+}

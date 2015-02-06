@@ -20,6 +20,7 @@
 		"scripts": [
 			"scripts/chromereload.js",
 			"scripts/modules/VocableManager.js",
+			"scripts/modules/DKTranslator.js",
 			"scripts/vendor/when.js",
 			"scripts/background.js"
 		]
@@ -44,6 +45,7 @@
 	}],
 	"permissions": [
 		"contextMenus",
+		"cookies",
 		"tabs",
 		"storage",
 		"unlimitedStorage",

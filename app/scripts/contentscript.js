@@ -274,4 +274,71 @@
 		// bootstrapping angular
 		angular.bootstrap(fvad, ['fvad-app-modal']);
 	}
+
+	// ------------------------------------------
+	// Helper functions
+	// ------------------------------------------
+	var stripTrash = function (input) {
+		return input.replace('»', '')
+					.replace('(', '')
+					.replace(')', '')
+					.trim();
+	};
+
+	var registerClickListener = function (element, srcTranslation, destTranslation, sentence) {
+		element.onclick = function () {
+			var message = {
+				type: 'ADD-TRANSLATION',
+				vocable: srcTranslation,
+				translation: destTranslation,
+				sentence: sentence,
+				sourceLanguage: 'da'
+			};
+			chrome.runtime.sendMessage(message, function () {
+				console.log(message);
+				element.innerHTML = 'vocable added!';
+				element.className = 'fvad-done';
+				element.onclick = null;
+			});
+		};
+	};
+
+	if (document.location.href.indexOf('www.ordbogen.com') >= 0) {
+		console.log('we are here!');
+		var results = document.querySelectorAll('[name="searchArticleResult"] li');
+		for (var i = 0; i < results.length; i++) {
+			var result = results[i];
+
+			var danishPhrase,
+				translatedPhrase,
+				sentence = '',
+				a;
+
+			a = document.createElement('a');
+			a.className = 'fvad-add-button';
+			a.innerHTML = 'Add to 50vad!';
+
+			if (result.children[0].tagName === 'SPAN' && result.children[0].className !== 'explanation' && result.children[1].tagName === 'INPUT') {
+				danishPhrase = stripTrash(result.children[0].innerText);
+				translatedPhrase = stripTrash(result.children[1].value);
+				
+				registerClickListener(a, danishPhrase, translatedPhrase, sentence);
+				result.insertBefore(a, result.children[2]);
+			}
+			else if (result.children[0].tagName === 'INPUT') {
+				danishPhrase = stripTrash(result.parentElement.parentElement.parentElement.parentElement.parentElement.childNodes[0].querySelector('input').value);
+				translatedPhrase = stripTrash(result.children[0].value);
+
+				registerClickListener(a, danishPhrase, translatedPhrase, sentence);
+				result.insertBefore(a, result.children[1]);
+			}
+			else if (result.children[0].className === 'explanation') {
+				danishPhrase = stripTrash(result.parentElement.parentElement.parentElement.parentElement.parentElement.childNodes[0].querySelector('input').value);
+				translatedPhrase = stripTrash(result.children[1].value);
+
+				registerClickListener(a, danishPhrase, translatedPhrase, sentence);
+				result.insertBefore(a, result.children[2]);
+			}
+		}
+	}
 })(window.angular);

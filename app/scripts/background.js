@@ -353,6 +353,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		getTargetLanguage(function (language) {
 			sendResponse(language);
 		});
+	} else if (message.type === 'ADD-TRANSLATION') {
+		storeVocable(message.vocable, message.translation, message.sentence, message.sourceLanguage, function () {
+			sendResponse('done');
+		});
 	}
 
 	return true;
@@ -411,6 +415,7 @@ chrome.contextMenus.create({
 	title: 'Translate with 50VocabsADay',
 	contexts: ['selection'],
 	onclick: function (info, tab) {
+		// new window.DKTranslator();
 		var searchFn,
 			message = {
 				type: 'GET-SELECTION'

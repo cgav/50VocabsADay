@@ -9,7 +9,7 @@
 		<link href="styles/main.css" rel="stylesheet">
 		<!-- endbuild -->
 	</head>
-	<body ng-controller="VocabularyController">
+	<body ng-controller="VocabularyController" ng-class="{'ninja-mode': ninjaMode}">
 		<div class="level-display">
 			<svg height="100" width="75">
 				<path d="M0,0 L0,100 L38,75 L75,100 L75,0 Z"/>
@@ -37,6 +37,10 @@
 				<button ng-click="shutup(3600)">1 hour</button>
 				<button ng-click="shutup(4 * 3600)">4 hours</button>
 				<button ng-click="shutup(24 * 3600)">24 hours</button>
+			</div>
+			<div class="special-actions">
+				<button ng-click="toggleNinjaMode(true)" ng-if="!ninjaMode">Start Ninja Mode</button>
+				<button ng-click="toggleNinjaMode(false)" ng-if="ninjaMode">Stop Ninja Mode</button>
 			</div>
 			<div class="footer">
 				<p>Practise makes perfect! Enjoying 50VocabsADay? Got Feedback? Drop me a line <a href="http://www.twitter.com/elconsta">@elconsta</a>.</p>

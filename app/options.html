@@ -20,6 +20,7 @@
 		<div ng-show="showNextVocablePanel() && !showShutupPanel()">
 			<p>Next vocable will be checked at <b>{{ nextVocableIn | date:"MMM d - H:mm" }}</b>.</p>
 			<button ng-click="askNextVocable()">Screw it, ask me now!</button>
+			<button ng-click="startNinjaMode()">Start ninja mode!</button>
 		</div>
 
 		<h2>Settings</h2>

@@ -28,14 +28,17 @@
 			$scope.hintGiven = false;
 			$scope.isFocused = false;
 
+			$scope.ninjaMode = false;
+
 			$scope.init = function () {
 				MessageService.registerReceiver($scope.onMessage);
 
 				MessageService.sendMessage({
 					type: 'GET-NEXT-VOCABLE'
-				}, function (nextVocable) {
-					$scope.vocable = nextVocable;
+				}, function (result) {
+					$scope.vocable = result.nextVocable;
 					$scope.isFocused = true;
+					$scope.ninjaMode = result.ninjaMode;
 					$scope.$apply();
 				});
 			};
@@ -55,7 +58,7 @@
 						vocable: $scope.vocable
 					}, function () {
 						window.setTimeout(function (hasNext) {
-							if (hasNext) {
+							if (hasNext || $scope.ninjaMode) {
 								// load new vocable
 								document.location.href = document.location.href;
 							} else {
@@ -97,6 +100,17 @@
 
 				// redirect
 				window.history.back();
+			};
+
+			$scope.toggleNinjaMode = function (value) {
+				MessageService.sendMessage({
+					type: 'SET-NINJA-MODE',
+					value: value
+				}, function () {
+					console.log('done');
+				});
+
+				$scope.ninjaMode = value;
 			};
 
 			// start

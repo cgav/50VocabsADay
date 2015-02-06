@@ -105,6 +105,15 @@
 				document.location.href = '50vad.html';
 			};
 
+			$scope.startNinjaMode = function () {
+				MessageService.sendMessage({
+					type: 'SET-NINJA-MODE',
+					value: true
+				}, function () {
+					document.location.href = '50vad.html';
+				});
+			};
+
 			$scope.changeTargetLanguage = function () {
 				MessageService.sendMessage({
 					type: 'CHANGE-TARGET-LANGUAGE',

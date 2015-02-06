@@ -1,3 +1,7 @@
+html, body {
+	height: 100%;
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -90,6 +94,24 @@ a {
 	background-color: #007bb8;
 }
 
+.special-actions {
+	text-align: center;
+	margin-top: 30px;
+}
+.special-actions button {
+	border: 0;
+	padding: 5px 20px;
+	width: 200px;
+
+	background-color: #D0021B;
+	color: #fff;
+	cursor: pointer;
+	outline: none;
+}
+.special-actions button:active {
+	background-color: #9A0517;
+}
+
 .footer {
 	margin-top: 50px;
 	margin-bottom: 25px;
@@ -127,4 +149,10 @@ a {
 
 .languages img {
 	vertical-align: middle;
+}
+
+.ninja-mode {
+	background: url('../images/ninja.png');
+	background-repeat: no-repeat;
+	background-position: left bottom;
 }

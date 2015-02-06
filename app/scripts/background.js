@@ -89,6 +89,35 @@ var updateNextPeriod = function () {
 	});
 };
 
+var setNinjaMode = function (start, callback) {
+	chrome.storage.local.get('meta', function (metaRecord) {
+		if (!metaRecord.meta) {
+			metaRecord.meta = {};
+		}
+
+		metaRecord.meta.ninjaMode = start;
+		chrome.storage.local.set(metaRecord, function () {
+			if (typeof callback === 'function') {
+				return callback();
+			}
+		});
+	});
+};
+
+var getNinjaMode = function (callback) {
+	chrome.storage.local.get('meta', function (metaRecord) {
+		if (typeof callback === 'function') {
+			var ninjaMode = false;
+
+			if (metaRecord.meta && metaRecord.meta.ninjaMode) {
+				ninjaMode = metaRecord.meta.ninjaMode;
+			}
+
+			return callback(ninjaMode);
+		}
+	});
+};
+
 var changeTargetLanguage = function (targetLanguage, callback) {
 	chrome.storage.local.get('meta', function (metaRecord) {
 		if(!metaRecord.meta) {
@@ -222,10 +251,10 @@ var updateVocable = function (vocableObject, callback) {
 	var recordToStore = {},
 		newTimestamp = calculateNewTimestamp(vocableObject.l);
 
-	if (vocableObject.l > 6) {
-		deleteVocable(vocableObject.ts);
-		return callback(false);
-	}
+	// if (vocableObject.l > 6) {
+	// 	deleteVocable(vocableObject.ts);
+	// 	return callback(false);
+	// }
 
 	// update next object
 	updateNextObject(vocableObject, newTimestamp, function () {
@@ -307,8 +336,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		shutup(message.duration);
 	} else if (message.type === 'GET-NEXT-VOCABLE') {
 		getNextVocable(function (nextVocableObject) {
-			console.log(nextVocableObject);
-			sendResponse(nextVocableObject);
+			getNinjaMode(function (ninjaMode) {
+				sendResponse({
+					nextVocable: nextVocableObject,
+					ninjaMode: ninjaMode
+				});
+			});
 		});
 	} else if (message.type === 'UPDATE-VOCABLE') {
 		updateVocable(message.vocable, function (hasNext) {
@@ -357,6 +390,12 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		storeVocable(message.vocable, message.translation, message.sentence, message.sourceLanguage, function () {
 			sendResponse('done');
 		});
+	} else if (message.type === 'SET-NINJA-MODE') {
+		setNinjaMode(message.value, function () {
+			sendResponse('done');
+		});
+	} else if (message.type === 'GET-NINJA-MODE') {
+		getNinjaMode(sendResponse);
 	}
 
 	return true;

@@ -1,5 +1,10 @@
 'use strict';
 
+//
+// How to get all level 7 vocabs:
+// chrome.storage.local.get(null, function (items) { console.log(Object.keys(items).filter(function (i) { console.log(i); return items[i].l === 7 })) })
+//
+
 var shutupUntil = Date.now(),
 	vocableManager = new window.VocableManager('en', 'de'),
 	levels = {
@@ -286,10 +291,21 @@ var getAllVocables = function (callback) {
 
 		chrome.storage.local.get(vocable, function (vocableObject) {
 			if (vocableObject[vocable]) {
-				vocables[vocableObject[vocable].ts].l = vocableObject[vocable].l;
-				vocables[vocableObject[vocable].ts].t = vocableObject[vocable].t;
-				vocables[vocableObject[vocable].ts].s = vocableObject[vocable].s;
-				vocables[vocableObject[vocable].ts].language = vocableObject[vocable].language;
+				if (vocableObject[vocable].ts) {
+					vocables[vocableObject[vocable].ts].l = vocableObject[vocable].l;
+					vocables[vocableObject[vocable].ts].t = vocableObject[vocable].t;
+					vocables[vocableObject[vocable].ts].s = vocableObject[vocable].s;
+					vocables[vocableObject[vocable].ts].language = vocableObject[vocable].language;
+				}
+				else {
+					var ts = +new Date() + 10000000;
+					vocables[ts] = {
+						l: vocableObject[vocable].l,
+						t: vocableObject[vocable].t,
+						s: vocableObject[vocable].s,
+						language: vocableObject[vocable].language
+					};
+				}
 			}
 			dfd.resolve();
 		});

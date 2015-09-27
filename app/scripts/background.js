@@ -13,7 +13,9 @@ var shutupUntil = Date.now(),
 		3: 5 * 3600 * 1000,				// 5 hours
 		4: 24 * 3600 * 1000,			// 24 hours
 		5: 25 * 24 * 3600 * 1000,		// 25 days
-		6: 120 * 24 * 3600 * 1000		// 120 days
+		6: 120 * 24 * 3600 * 1000,		// 120 days
+		7: 365 * 24 * 3600 * 1000,		// 365 days
+		8: 2 * 365 * 24 * 3600 * 1000	// 2 years
 	},
 	nextPeriod = Date.now(),
 	popupTranslation = null;
@@ -70,12 +72,18 @@ var shutup = function (duration) {
 
 var updateShutupUntil = function () {
 	chrome.storage.local.get('meta', function (metaRecord) {
+		var now = Date.now();
 		if (!metaRecord.meta) {
-			shutupUntil = Date.now();
+			shutupUntil = now;
 			return;
 		}
 
-		shutupUntil = metaRecord.meta.shutupUntil || Date.now();
+		if (metaRecord.meta.shutupUntil < now) {
+			shutupUntil = now;
+			return;
+		}
+
+		shutupUntil = metaRecord.meta.shutupUntil || now;
 	});
 };
 

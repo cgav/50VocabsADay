@@ -21,7 +21,7 @@
 			<div class="vocable-area">
 				<p>{{ vocable.t }}</p>
 				<div class="languages">
-					<img src="images/flags/{{ vocable.language.to }}.png"> <span>&gt;</span> <img src="images/flags/{{ vocable.language.from }}.png">
+					<img ng-src="images/flags/{{ vocable.language.to }}.png"> <span>&gt;</span> <img ng-src="images/flags/{{ vocable.language.from }}.png">
 				</div>
 			</div>
 			<div class="translation-area">
@@ -54,7 +54,7 @@
 		<!-- endbower -->
 		<!-- endbuild -->
 
-		<!-- build:js scripts/options.js -->
+		<!-- build:js scripts/50vad.js -->
 		<script src="scripts/ng-modules/MessageService.js"></script>
 		<script src="scripts/50vad.js"></script>
 		<!-- endbuild -->

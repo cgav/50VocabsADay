@@ -1,4 +1,4 @@
-(function (angular) {
+(function (angular, moment) {
 	'use strict';
 
 	var app = angular.module('50vad-options-app', ['MessageServiceModule', 'ngSanitize']);
@@ -53,33 +53,7 @@
 			};
 
 			$scope.convertToReadable = function (timestamp) {
-				var millisleft = timestamp - Date.now();
-
-				if (millisleft < 0) {
-					return 'now';
-				}
-
-				if (millisleft <= 600 * 1000) {
-					return 'in ' + parseInt(millisleft / 1000) + ' seconds';
-				}
-
-				if (millisleft <= 3600 * 1000) {
-					return 'in the next hour';
-				}
-
-				if (millisleft <= 3600 * 1000 * 6) {
-					return 'in the next couple of hours';
-				}
-
-				if (millisleft <= 84600 * 1000) {
-					return 'today';
-				}
-
-				if (millisleft <= 84600 * 1000 * 2) {
-					return 'tomorrow';
-				}
-
-				return 'in the next couple of days';
+				return moment(parseInt(timestamp)).fromNow();
 			};
 
 			$scope.showShutupPanel = function () {
@@ -136,4 +110,4 @@
 			$scope.init();
 		}
 	]);
-})(window.angular);
+})(window.angular, window.moment);

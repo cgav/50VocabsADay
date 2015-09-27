@@ -143,7 +143,8 @@ module.exports = function (grunt) {
 			},
 			html: [
 				'<%= config.app %>/popup.html',
-				'<%= config.app %>/options.html'
+				'<%= config.app %>/options.html',
+				'<%= config.app %>/50vad.html'
 			]
 		},
 
